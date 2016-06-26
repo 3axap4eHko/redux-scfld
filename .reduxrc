@@ -1,8 +1,9 @@
 {
-  "paths": {
-    "actions": "./spec/app/actions",
-    "reducers": "./spec/app/reducers",
-    "types": "./spec/app/types"
-  },
-  "defaultState": "./spec/app/default-state"
+    "actionsPath":"./spec/app/actions",
+    "actionTemplatePath": "./spec/templates/action.jst",
+    "reducersPath":"./spec/app/reducers",
+    "reducerTemplatePath": "./spec/templates/reducer.jst",
+    "typesPath":"./spec/app/types",
+    "defaultStatePath": "./spec/default-state"
+
 }

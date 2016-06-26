@@ -1,6 +1,6 @@
 'use strict';
 
-import createStore from './app/store';
+import createStore from './store';
 import {postsFetchPage} from './app/actions';
 
 describe('Scaffold test suite:', () => {
@@ -8,8 +8,9 @@ describe('Scaffold test suite:', () => {
     it('Test dispatch/listen action', done => {
         const unsubscribe = store.subscribe(() => {
             const state = store.getState();
-            if (state.result) {
-                expect(state.result).toEqual('test');
+            if (state.has('result')) {
+                expect(state.get('default')).toEqual('test');
+                expect(state.get('result')).toEqual('test');
                 unsubscribe();
                 done()
             }

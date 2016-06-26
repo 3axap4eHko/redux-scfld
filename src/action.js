@@ -1,31 +1,31 @@
 'use strict';
 
-const Fs = require('fs');
-const Path = require('path');
-const _ = require('lodash');
+import Fs from 'fs';
+import Path from 'path';
+import _ from 'lodash';
 
-const {mkDir, relative} = require('./utils');
-const templateOptions = require('./template-options');
+import config from './config';
+import {mkDir, relative} from './utils';
+import templateOptions  from './template-options';
 
-const actionTemplate = _.template(Fs.readFileSync(Path.join(__dirname, 'templates', 'action.jst')), templateOptions);
-const indexTemplate = _.template(Fs.readFileSync(Path.join(__dirname, 'templates', 'action-index.jst')), templateOptions);
+const actionTemplate = _.template(Fs.readFileSync(config.actionTemplatePath), templateOptions);
+const indexTemplate = _.template(Fs.readFileSync(config.actionsIndexTemplatePath), templateOptions);
 
-module.exports = {
-    createAction(entity, options, config) {
-        mkDir(entity.actionFolder);
-        if (Fs.existsSync(entity.actionPath) && !options.force) {
-            throw new Error(`Action '${entity.fullName}' already exists`)
-        }
-        const content = actionTemplate(entity);
-        Fs.writeFileSync(entity.actionPath, content);
-    },
-    generateActionsIndex(entities, config) {
-        mkDir(config.paths.actions);
-        const content = indexTemplate({
-            entities,
-            typePath: relative(config.paths.actions, config.paths.types)
-        });
-        Fs.writeFileSync(Path.join(config.paths.actions, 'index.js'), content);
-        return entities;
+export function createAction(entity, options) {
+    mkDir(entity.actionFolder);
+    if (Fs.existsSync(entity.actionPath) && !options.force) {
+        throw new Error(`Action '${entity.fullName}' already exists`)
     }
-};
+    const content = actionTemplate(entity);
+    Fs.writeFileSync(entity.actionPath, content);
+}
+
+export function generateActionsIndex(entities) {
+    mkDir(config.actionsPath);
+    const content = indexTemplate({
+        entities,
+        typePath: relative(config.actionsPath, config.typesPath)
+    });
+    Fs.writeFileSync(Path.join(config.actionsPath, 'index.js'), content);
+    return entities;
+}

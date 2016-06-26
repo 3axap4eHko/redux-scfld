@@ -1,0 +1,48 @@
+{__warning_header}
+'use strict';
+
+import {
+    PROGRESS,
+    SUCCESS,
+    FAILURE,
+<% eachEntity(entities, entity => { %>
+    {entity.TYPE},
+<% }) %>
+} from '{typePath}';
+
+<% eachEntity(entities, entity => { %>
+import {entity.name} from './{entity.path}';
+<% } ) %>
+
+<% eachEntity(entities, entity => { %>
+function create{entity.Name}Progress(...args) {
+    return {
+        type: {entity.TYPE},
+        phase: PROGRESS,
+        args
+    };
+}
+function create{entity.Name}Success(result) {
+    return {
+        type: {entity.TYPE},
+        phase: SUCCESS,
+        result
+    };
+}
+function create{entity.Name}Failure(error) {
+    return {
+        type: {entity.TYPE},
+        phase: FAILURE,
+        error
+    };
+}
+
+export const {entity.fullName} = (...args) => {
+    return (dispatch, getState) => {
+        dispatch(create{entity.Name}Progress(...args));
+        return Promise.resolve( {entity.name}(getState, ...args) )
+            .then( result => dispatch(create{entity.Name}Success(result)) )
+            .catch( error => dispatch(create{entity.Name}Failure(error)) );
+    }
+};
+<% }) %>

@@ -1,16 +1,17 @@
 'use strict';
 
-const Fs = require('fs');
-const Path = require('path');
-const _ = require('lodash');
-const {mkDir} = require('./utils');
-const templateOptions = require('./template-options');
+import Fs from 'fs';
+import Path from 'path';
+import _ from 'lodash';
 
-const typesTemplate = _.template(Fs.readFileSync(Path.join(__dirname, 'templates', 'types.jst')), templateOptions);
+import config from './config';
+import {mkDir} from './utils';
+import templateOptions  from './template-options';
 
+const typesTemplate = _.template(Fs.readFileSync(config.typesTemplatePath), templateOptions);
 
-module.exports = function (entities, options, config) {
-    mkDir(config.paths.types);
+module.exports = function (entities) {
+    mkDir(config.typesPath);
     const content = typesTemplate({entities});
-    Fs.writeFileSync(Path.join(config.paths.types, 'index.js'), content);
+    Fs.writeFileSync(Path.join(config.typesPath, 'index.js'), content);
 };
