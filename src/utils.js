@@ -26,7 +26,7 @@ export function relative(from, to) {
 }
 
 export function getType(actionName) {
-    return actionName.replace(/([A-Z])/g, '_$1').toUpperCase();
+    return actionName.replace(/(?![A-Z])(\w)([A-Z])/g, '$1_$2').toUpperCase();
 }
 
 export function getFilename(baseName) {
@@ -59,7 +59,6 @@ export function getEntity(name) {
 }
 
 export function getEntities(addEntity) {
-    mkDir(config.actionsPath);
     return Glob.sync(Path.join(config.actionsPath, '*','*.js'), {root: config.actionsPath}).reduce((entities, filename) => {
         const name = getName(filename);
         const entity = getEntity(name, config);

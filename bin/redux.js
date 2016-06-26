@@ -60,7 +60,7 @@ var commands = {
             typesPath: './app/types',
             defaultStatePath: false
         };
-        _fs2.default.writeFileSync('.reduxrc', JSON.stringify(baseConfig));
+        _fs2.default.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '    '));
     },
     create: function create(name, options) {
         var entity = (0, _utils.getEntity)(name);

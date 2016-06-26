@@ -34,7 +34,7 @@ const commands = {
             typesPath: './app/types',
             defaultStatePath: false
         };
-        Fs.writeFileSync('.reduxrc', JSON.stringify(baseConfig))
+        Fs.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '    '))
     },
     create(name, options) {
         const entity = getEntity(name);

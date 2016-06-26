@@ -61,7 +61,7 @@ function relative(from, to) {
 }
 
 function getType(actionName) {
-    return actionName.replace(/([A-Z])/g, '_$1').toUpperCase();
+    return actionName.replace(/(?![A-Z])(\w)([A-Z])/g, '$1_$2').toUpperCase();
 }
 
 function getFilename(baseName) {
@@ -105,7 +105,6 @@ function getEntity(name) {
 }
 
 function getEntities(addEntity) {
-    mkDir(_config2.default.actionsPath);
     return _glob2.default.sync(_path2.default.join(_config2.default.actionsPath, '*', '*.js'), { root: _config2.default.actionsPath }).reduce(function (entities, filename) {
         var name = getName(filename);
         var entity = getEntity(name, _config2.default);
