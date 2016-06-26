@@ -10,12 +10,19 @@ import {
 export default function(state, action) {
     switch(action.phase) {
         case PROGRESS:
+            return state.set('progress', true);
             break;
         case SUCCESS:
-            return state.set('result', action.result);
+            return state.merge({
+                'result': action.result,
+                'progress': false
+            });
             break;
         case FAILURE:
-            console.log(action.error)
+            return state.merge({
+                'error': action.error,
+                'progress': false
+            });
             break;
     }
     return state;

@@ -26,7 +26,7 @@ Redux Scaffold Generator
 ``` bash
 $ redux create postsFetchPage
 ```
-
+```
 +---app
     |   default-state.js
     |   store.js
@@ -45,7 +45,7 @@ $ redux create postsFetchPage
     |           
     \---types
             index.js
-        
+```
 
 #### Action
 `app/actions/posts/fetch-page.js` contains

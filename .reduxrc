@@ -5,5 +5,4 @@
     "reducerTemplatePath": "./spec/templates/reducer.jst",
     "typesPath":"./spec/app/types",
     "defaultStatePath": "./spec/default-state"
-
 }

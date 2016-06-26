@@ -1,6 +1,14 @@
 {__info_header}
 'use strict';
 
-export default function(getState, testValue) {
-    return new Promise( resolve => setTimeout(resolve, 1000, testValue));
+export default function(getState, callback) {
+    return new Promise( (resolve, reject) => {
+        setTimeout(() => {
+            try {
+                resolve(callback())
+            } catch(e) {
+                reject(e);
+            }
+        }, 1000)
+    });
 }

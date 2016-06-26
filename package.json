@@ -1,14 +1,17 @@
 {
   "name": "redux-scfld",
   "version": "0.0.2",
-  "bin": "./bin/redux.js",
+  "bin": {
+    "redux": "./bin/redux.js"
+  },
   "description": "Redux Scaffold",
   "scripts": {
-    "test": "gulp && redux create postsFetchPage && jasmine",
+    "test": "gulp && redux create postsFetchPage && redux create postsThrowError && jasmine",
     "patch-release": "npm run test && npm version patch && git push && git push --tags && npm publish"
   },
   "keywords": [
-    "redux"
+    "redux",
+    "scaffolder"
   ],
   "author": "Ivan Zakharchenko <3axap4eHko.development@gmail.com> (http://potofcode.com/)",
   "license": "MIT",
