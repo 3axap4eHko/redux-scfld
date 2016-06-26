@@ -11,13 +11,13 @@ Redux Scaffold Generator
 ``` json
 {
   "actionsPath": "./app/actions",
-  "actionTemplatePath": "node_modules/redux-scfld/dist/templates/action.jst",
-  "actionsIndexTemplatePath": "node_modules/redux-scfld/dist/templates/action-index.jst",
+  "actionTemplatePath": "./node_modules/redux-scfld/dist/templates/action.jst",
+  "actionsIndexTemplatePath": "./node_modules/redux-scfld/dist/templates/action-index.jst",
   "reducersPath": "./app/reducers",
-  "reducerTemplatePath": "node_modules/redux-scfld/dist/templates/reducer.jst",
-  "reducersIndexTemplatePath": "node_modules/redux-scfld/dist/templates/reducer-index.jst",
+  "reducerTemplatePath": "./node_modules/redux-scfld/dist/templates/reducer.jst",
+  "reducersIndexTemplatePath": "./node_modules/redux-scfld/dist/templates/reducer-index.jst",
   "typesPath": "./app/types",
-  "typesTemplatePath": "node_modules/redux-scfld/dist/templates/types.jst",
+  "typesTemplatePath": "./node_modules/redux-scfld/dist/templates/types.jst",
   "defaultStatePath": false
 }
 ```

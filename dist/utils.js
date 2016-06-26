@@ -105,6 +105,7 @@ function getEntity(name) {
 }
 
 function getEntities(addEntity) {
+    mkDir(_config2.default.actionsPath);
     return _glob2.default.sync(_path2.default.join(_config2.default.actionsPath, '*', '*.js'), { root: _config2.default.actionsPath }).reduce(function (entities, filename) {
         var name = getName(filename);
         var entity = getEntity(name, _config2.default);

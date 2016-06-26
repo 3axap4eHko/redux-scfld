@@ -45,6 +45,7 @@ function createReducer(entity, options) {
     _fs2.default.writeFileSync(entity.reducerPath, content);
 }
 function generateReducersIndex(entities) {
+    (0, _utils.mkDir)(_config2.default.reducersPath);
     var content = indexTemplate({
         entities: entities,
         typePath: (0, _utils.relative)(_config2.default.reducersPath, _config2.default.typesPath),

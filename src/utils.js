@@ -59,6 +59,7 @@ export function getEntity(name) {
 }
 
 export function getEntities(addEntity) {
+    mkDir(config.actionsPath);
     return Glob.sync(Path.join(config.actionsPath, '*','*.js'), {root: config.actionsPath}).reduce((entities, filename) => {
         const name = getName(filename);
         const entity = getEntity(name, config);

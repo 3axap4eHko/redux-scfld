@@ -22,6 +22,7 @@ export function createReducer(entity, options) {
     Fs.writeFileSync(entity.reducerPath, content);
 }
 export function generateReducersIndex(entities) {
+    mkDir(config.reducersPath);
     const content = indexTemplate({
         entities,
         typePath: relative(config.reducersPath, config.typesPath),
