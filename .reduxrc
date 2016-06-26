@@ -1,0 +1,8 @@
+{
+  "paths": {
+    "actions": "./spec/app/actions",
+    "reducers": "./spec/app/reducers",
+    "types": "./spec/app/types"
+  },
+  "defaultState": "./spec/app/default-state"
+}

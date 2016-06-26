@@ -1,0 +1,6 @@
+.idea
+.vscode
+.tmp 
+build
+node_modules
+npm-debug.log

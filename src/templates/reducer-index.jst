@@ -1,0 +1,27 @@
+{__warning_header}
+'use strict';
+
+import {
+<% eachEntity(entities, entity => { %>
+    {entity.TYPE},
+<% } ) %>
+} from './{typePath}';
+
+<% if (defaultState) {%>import defaultState from '{defaultState}';<% } else { %>const defaultState = {};<% } %>
+
+<% eachEntity(entities, entity => { %>
+import {entity.fullName} from './{entity.path}';
+<% } ) %>
+
+const reducers = {
+<% eachEntity(entities, entity => { %>
+    [{entity.TYPE}]: {entity.fullName},
+<% } ) %>
+};
+
+export default function(state = defaultState, action) {
+    if(action.type && (action.type in reducers)) {
+        return reducers[action.type](state, action);
+    }
+    return state;
+};
