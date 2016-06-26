@@ -1,0 +1,29 @@
+{__warning_header}
+'use strict';
+
+import { Map } from 'immutable';
+
+import {
+<% eachEntity(entities, entity => { %>
+    {entity.TYPE},
+<% } ) %>
+} from './{typePath}';
+
+<% if (defaultStatePath) {%>import defaultState from '{defaultStatePath}';<% } else { %>const defaultState = {};<% } %>
+
+<% eachEntity(entities, entity => { %>
+import {entity.fullName} from './{entity.path}';
+<% } ) %>
+
+const reducers = {
+<% eachEntity(entities, entity => { %>
+    [{entity.TYPE}]: {entity.fullName},
+<% } ) %>
+};
+
+export default function(state = defaultState, action) {
+    if(action.type && (action.type in reducers)) {
+        return Map(reducers[action.type](state.toJS(), action));
+    }
+    return state;
+};
