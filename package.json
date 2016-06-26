@@ -7,7 +7,7 @@
   "description": "Redux Scaffold",
   "scripts": {
     "test": "node node_modules/jasmine/bin/jasmine.js",
-    "build": "gulp && node node_modules/jasmine/bin/jasmine.js"
+    "patch-release": "npm run test && npm version patch && git git push && git push --tags && npm publish"
   },
   "keywords": [],
   "author": "Ivan Zakharchenko <3axap4eHko.development@gmail.com> (http://potofcode.com/)",
