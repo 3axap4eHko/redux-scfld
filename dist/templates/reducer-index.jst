@@ -1,7 +1,10 @@
 {__warning_header}
 'use strict';
 
+import { combineReducers } from 'redux';
+
 import {
+    NAMESPACE,
 <% eachEntity(entities, entity => { %>
     {entity.TYPE},
 <% } ) %>
@@ -14,14 +17,28 @@ import {entity.fullName} from './{entity.path}';
 <% } ) %>
 
 const reducers = {
-<% eachEntity(entities, entity => { %>
-    [{entity.TYPE}]: {entity.fullName},
+<% _.forEach(entities, (group, namespace) => { %>
+    [NAMESPACE.{namespace}]: {
+<% _.forEach(group, entity => { %>
+        [{entity.TYPE}]: {entity.fullName},
+<% } ) %>
+    },
 <% } ) %>
 };
 
 export default function(state = defaultState, action) {
-    if(action.type && (action.type in reducers)) {
-        state[action.namespace] = reducers[action.type](state[action.namespace], action);
+    const {namespace, type} = action;
+    if ( state && namespace in state && namespace in reducers ) {
+        const prevNamespaceState = state[namespace];
+        if ( type in reducers[namespace] ) {
+            const nextNamespaceState = reducers[namespace][type](prevNamespaceState, action);
+            if (typeof nextNamespaceState === 'undefined') {
+                throw new Error(`State ${<%  %>namespace} can't be undefined`);
+            }
+            state = Object.assign({}, state, {[namespace]: nextNamespaceState});
+        } else {
+            throw new Error(`Entity  ${<%  %>namespace}.${<%  %>type} not defined`);
+        }
     }
     return state;
 };

@@ -40,7 +40,7 @@ function createReducer(entity, options) {
     }
     var content = reducerTemplate({
         entity: entity,
-        typesPath: (0, _utils.relative)(entity.reducerFolder, _config2.default.typesPath)
+        typePath: (0, _utils.relative)(entity.reducerFolder, _config2.default.typesPath)
     });
     _fs2.default.writeFileSync(entity.reducerPath, content);
 }
