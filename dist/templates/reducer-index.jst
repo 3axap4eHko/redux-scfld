@@ -37,7 +37,7 @@ export default function(state = defaultState, action) {
             }
             state = Object.assign({}, state, {[namespace]: nextNamespaceState});
         } else {
-            throw new Error(`Entity  ${<%  %>namespace}.${<%  %>type} not defined`);
+            throw new Error(`Entity ${<%  %>namespace}.${<%  %>type} not defined`);
         }
     }
     return state;
