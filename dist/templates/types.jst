@@ -5,6 +5,12 @@ export const PROGRESS = 'PROGRESS';
 export const SUCCESS = 'SUCCESS';
 export const FAILURE = 'FAILURE';
 
+export const NAMESPACE = {
+<% Object.keys(entities).forEach( namespace => { %>
+    {namespace}: '{namespace}',
+<% } ) %>
+};
+
 <% eachEntity(entities, entity => { %>
 export const {entity.TYPE} = '{entity.TYPE}';
 <% } ) %>

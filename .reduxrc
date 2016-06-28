@@ -3,7 +3,6 @@
     "actionTemplatePath": "./spec/templates/action.jst",
     "reducersPath":"./spec/app/reducers",
     "reducerTemplatePath": "./spec/templates/reducer.jst",
-    "reducersIndexTemplatePath": "./spec/templates/reducer-index.jst",
     "typesPath":"./spec/app/types",
     "defaultStatePath": "./spec/default-state"
 }

@@ -2,6 +2,7 @@
 'use strict';
 
 import {
+    NAMESPACE,
     PROGRESS,
     SUCCESS,
     FAILURE,
@@ -17,6 +18,7 @@ import {entity.name} from './{entity.path}';
 <% eachEntity(entities, entity => { %>
 function create{entity.Name}Progress(...args) {
     return {
+        namespace: NAMESPACE.{entity.namespace},
         type: {entity.TYPE},
         phase: PROGRESS,
         args
@@ -24,6 +26,7 @@ function create{entity.Name}Progress(...args) {
 }
 function create{entity.Name}Success(result) {
     return {
+        namespace: NAMESPACE.{entity.namespace},
         type: {entity.TYPE},
         phase: SUCCESS,
         result
@@ -31,6 +34,7 @@ function create{entity.Name}Success(result) {
 }
 function create{entity.Name}Failure(error) {
     return {
+        namespace: NAMESPACE.{entity.namespace},
         type: {entity.TYPE},
         phase: FAILURE,
         error

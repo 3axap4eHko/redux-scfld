@@ -21,7 +21,7 @@ const reducers = {
 
 export default function(state = defaultState, action) {
     if(action.type && (action.type in reducers)) {
-        return reducers[action.type](state, action);
+        state[action.namespace] = reducers[action.type](state[action.namespace], action);
     }
     return state;
 };

@@ -109,6 +109,50 @@ const store = createStore();
 store.dispatch(postsFetchPage());
 ```
 
+### Templates
+.reduxrc
+``` json
+{
+  "actionsPath": "./app/actions",
+  "actionTemplatePath": "./app/templates/action.jst",
+  "actionsIndexTemplatePath": "./app/templates/action-index.jst",
+  "reducersPath": "./app/reducers",
+  "reducerTemplatePath": "./app/templates/reducer.jst",
+  "reducersIndexTemplatePath": "./app/templates/reducer-index.jst",
+  "typesPath": "./app/types",
+  "typesTemplatePath": "./app/templates/types.jst",
+  "defaultStatePath": false
+}
+```
+
+template files is lodash [_.template](https://lodash.com/docs#template) function with arguments entity or entities.
+
+Entity interface
+``` javascript
+Entity = {
+    namespace,
+    fullName,
+    FullName,
+    name,
+    Name,
+    TYPE,
+    filename,
+    path,
+    actionFolder,
+    actionPath,
+    reducerFolder,
+    reducerPath
+}
+```
+
+Entities interface
+``` javascript
+Entities = {
+    [entity.namespace]: {
+        [entity.name]: entity
+    }
+}
+```
 
 ## License
 [The MIT License](http://opensource.org/licenses/MIT)
