@@ -16,8 +16,6 @@ var _path2 = _interopRequireDefault(_path);
 
 var _lodash = require('lodash');
 
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
@@ -30,8 +28,8 @@ var _templateOptions2 = _interopRequireDefault(_templateOptions);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var actionTemplate = _lodash2.default.template(_fs2.default.readFileSync(_config2.default.actionTemplatePath), _templateOptions2.default);
-var indexTemplate = _lodash2.default.template(_fs2.default.readFileSync(_config2.default.actionsIndexTemplatePath), _templateOptions2.default);
+var actionTemplate = (0, _lodash.template)(_fs2.default.readFileSync(_config2.default.actionTemplatePath), _templateOptions2.default);
+var indexTemplate = (0, _lodash.template)(_fs2.default.readFileSync(_config2.default.actionsIndexTemplatePath), _templateOptions2.default);
 
 function createAction(entity, options) {
     (0, _utils.mkDir)(entity.actionFolder);

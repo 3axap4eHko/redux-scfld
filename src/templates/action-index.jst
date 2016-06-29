@@ -20,7 +20,7 @@ function create{entity.Name}Progress(...args) {
     return {
         namespace: NAMESPACE.{entity.namespace},
         type: {entity.TYPE},
-        phase: PROGRESS,
+        status: PROGRESS,
         args
     };
 }
@@ -28,7 +28,7 @@ function create{entity.Name}Success(result) {
     return {
         namespace: NAMESPACE.{entity.namespace},
         type: {entity.TYPE},
-        phase: SUCCESS,
+        status: SUCCESS,
         result
     };
 }
@@ -36,7 +36,7 @@ function create{entity.Name}Failure(error) {
     return {
         namespace: NAMESPACE.{entity.namespace},
         type: {entity.TYPE},
-        phase: FAILURE,
+        status: FAILURE,
         error
     };
 }

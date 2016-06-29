@@ -3,11 +3,14 @@
 import Fs from 'fs';
 import Path from 'path';
 import Glob from 'glob';
-import _ from 'lodash';
+import {camelCase, upperFirst, lowerFirst}  from 'lodash';
 import config from './config';
 
+const slashReplaceExpr = /\\/g;
 const pathSplitterExpr = /\/|\\/g;
-const pathExtractExpr = /^(\w+?)([A-Z].*)/;
+const pathExtractExpr = /(?![A-Z])(\w)([A-Z])/g;
+const namespaceExtractExpr = /^(\w+?)([A-Z].*)/;
+const nameExtractExpr = /\/(\w+\/[\w\-]+?)(\.js)?$/;
 
 function createIfNotExists(path) {
     if (!Fs.existsSync(path)) {
@@ -22,39 +25,38 @@ export function mkDir(path) {
 }
 
 export function relative(from, to) {
-    return Path.relative(from, to).replace(/\\/g,'/');
+    return Path.relative(from, to).replace(slashReplaceExpr,'/');
 }
 
 export function getType(actionName) {
-    return actionName.replace(/(?![A-Z])(\w)([A-Z])/g, '$1_$2').toUpperCase();
+    return actionName.replace(pathExtractExpr, '$1_$2').toUpperCase();
 }
 
 export function getFilename(baseName) {
-    return `${baseName.replace(/(\w)([A-Z])/g, '$1-$2').toLowerCase()}.js`;
+    return `${baseName.replace(pathExtractExpr, '$1-$2').toLowerCase()}.js`;
 }
 
 export function getName(path) {
-    const [,name] = path.replace(/\\/g, '/').match(/\/(\w+\/[\w\-]+?)(\.js)?$/);
-    return _.camelCase(name);
+    const [,name] = path.replace(slashReplaceExpr, '/').match(nameExtractExpr);
+    return camelCase(name);
 }
 
 export function getEntity(name) {
-    const [,namespace, baseName] = name.match(pathExtractExpr);
+    const [,namespace, baseName] = name.match(namespaceExtractExpr);
     const filename = getFilename(baseName);
-
     return {
         namespace,
         fullName: name,
-        FullName: _.upperFirst(name),
-        name: _.lowerFirst(baseName),
+        FullName: upperFirst(name),
+        name: lowerFirst(baseName),
         Name: baseName,
         TYPE: getType(name),
         filename: filename,
-        path: Path.join(namespace, filename).replace(/\\/g,'/'),
-        actionFolder: Path.join(config.actionsPath, namespace).replace(/\\/g,'/'),
-        actionPath: Path.join(config.actionsPath, namespace, filename).replace(/\\/g,'/'),
-        reducerFolder: Path.join(config.reducersPath, namespace).replace(/\\/g,'/'),
-        reducerPath: Path.join(config.reducersPath, namespace, filename).replace(/\\/g,'/')
+        path: Path.join(namespace, filename).replace(slashReplaceExpr,'/'),
+        actionFolder: Path.join(config.actionsPath, namespace).replace(slashReplaceExpr,'/'),
+        actionPath: Path.join(config.actionsPath, namespace, filename).replace(slashReplaceExpr,'/'),
+        reducerFolder: Path.join(config.reducersPath, namespace).replace(slashReplaceExpr,'/'),
+        reducerPath: Path.join(config.reducersPath, namespace, filename).replace(slashReplaceExpr,'/')
     };
 }
 

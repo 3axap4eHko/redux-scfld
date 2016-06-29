@@ -4,7 +4,18 @@ Redux Scaffold Generator
 ## Install
  $ npm install -g redux-scfld
 
+#### Dependencies
+ - redux
+
 ## Usage
+
+### Convention
+
+Redux Scaffold Entity name format `{namespace}{ActionName}` where
+{namespace} should be a noun and first word in {ActionName} should be a verb from capital letter.
+For example: `postsFetchPage`, `postsFetchPost`, `postsCreatePost` etc.
+
+
 
 ### Configuration
 .reduxrc

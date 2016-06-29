@@ -2,13 +2,13 @@
 
 import Fs from 'fs';
 import Path from 'path';
-import _ from 'lodash';
+import {template} from 'lodash';
 
 import config from './config';
 import {mkDir} from './utils';
 import templateOptions  from './template-options';
 
-const typesTemplate = _.template(Fs.readFileSync(config.typesTemplatePath), templateOptions);
+const typesTemplate = template(Fs.readFileSync(config.typesTemplatePath), templateOptions);
 
 module.exports = function (entities) {
     mkDir(config.typesPath);

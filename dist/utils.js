@@ -29,8 +29,6 @@ var _glob2 = _interopRequireDefault(_glob);
 
 var _lodash = require('lodash');
 
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
@@ -39,8 +37,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
+var slashReplaceExpr = /\\/g;
 var pathSplitterExpr = /\/|\\/g;
-var pathExtractExpr = /^(\w+?)([A-Z].*)/;
+var pathExtractExpr = /(?![A-Z])(\w)([A-Z])/g;
+var namespaceExtractExpr = /^(\w+?)([A-Z].*)/;
+var nameExtractExpr = /\/(\w+\/[\w\-]+?)(\.js)?$/;
 
 function createIfNotExists(path) {
     if (!_fs2.default.existsSync(path)) {
@@ -57,29 +58,29 @@ function mkDir(path) {
 }
 
 function relative(from, to) {
-    return _path2.default.relative(from, to).replace(/\\/g, '/');
+    return _path2.default.relative(from, to).replace(slashReplaceExpr, '/');
 }
 
 function getType(actionName) {
-    return actionName.replace(/(?![A-Z])(\w)([A-Z])/g, '$1_$2').toUpperCase();
+    return actionName.replace(pathExtractExpr, '$1_$2').toUpperCase();
 }
 
 function getFilename(baseName) {
-    return baseName.replace(/(\w)([A-Z])/g, '$1-$2').toLowerCase() + '.js';
+    return baseName.replace(pathExtractExpr, '$1-$2').toLowerCase() + '.js';
 }
 
 function getName(path) {
-    var _path$replace$match = path.replace(/\\/g, '/').match(/\/(\w+\/[\w\-]+?)(\.js)?$/);
+    var _path$replace$match = path.replace(slashReplaceExpr, '/').match(nameExtractExpr);
 
     var _path$replace$match2 = _slicedToArray(_path$replace$match, 2);
 
     var name = _path$replace$match2[1];
 
-    return _lodash2.default.camelCase(name);
+    return (0, _lodash.camelCase)(name);
 }
 
 function getEntity(name) {
-    var _name$match = name.match(pathExtractExpr);
+    var _name$match = name.match(namespaceExtractExpr);
 
     var _name$match2 = _slicedToArray(_name$match, 3);
 
@@ -87,20 +88,19 @@ function getEntity(name) {
     var baseName = _name$match2[2];
 
     var filename = getFilename(baseName);
-
     return {
         namespace: namespace,
         fullName: name,
-        FullName: _lodash2.default.upperFirst(name),
-        name: _lodash2.default.lowerFirst(baseName),
+        FullName: (0, _lodash.upperFirst)(name),
+        name: (0, _lodash.lowerFirst)(baseName),
         Name: baseName,
         TYPE: getType(name),
         filename: filename,
-        path: _path2.default.join(namespace, filename).replace(/\\/g, '/'),
-        actionFolder: _path2.default.join(_config2.default.actionsPath, namespace).replace(/\\/g, '/'),
-        actionPath: _path2.default.join(_config2.default.actionsPath, namespace, filename).replace(/\\/g, '/'),
-        reducerFolder: _path2.default.join(_config2.default.reducersPath, namespace).replace(/\\/g, '/'),
-        reducerPath: _path2.default.join(_config2.default.reducersPath, namespace, filename).replace(/\\/g, '/')
+        path: _path2.default.join(namespace, filename).replace(slashReplaceExpr, '/'),
+        actionFolder: _path2.default.join(_config2.default.actionsPath, namespace).replace(slashReplaceExpr, '/'),
+        actionPath: _path2.default.join(_config2.default.actionsPath, namespace, filename).replace(slashReplaceExpr, '/'),
+        reducerFolder: _path2.default.join(_config2.default.reducersPath, namespace).replace(slashReplaceExpr, '/'),
+        reducerPath: _path2.default.join(_config2.default.reducersPath, namespace, filename).replace(slashReplaceExpr, '/')
     };
 }
 

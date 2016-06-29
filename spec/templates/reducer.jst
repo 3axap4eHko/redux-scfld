@@ -8,18 +8,24 @@ import {
 } from './{typePath}';
 
 export default function(state, action) {
-    switch(action.phase) {
+    switch(action.status) {
         case PROGRESS:
-            state.progress = true;
-            break;
+            return {
+                ...state,
+                progress: true
+            };
         case SUCCESS:
-            state.result = action.result;
-            state.progress = false;
-            break;
+            return {
+                ...state,
+                progress: false,
+                result: action.result
+            };
         case FAILURE:
-            state.error = action.error;
-            state.progress = false;
-            break;
+            return {
+                ...state,
+                progress: false,
+                error: action.error
+            };
     }
     return state;
 };

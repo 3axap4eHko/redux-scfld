@@ -10,8 +10,6 @@ var _path2 = _interopRequireDefault(_path);
 
 var _lodash = require('lodash');
 
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
@@ -24,7 +22,7 @@ var _templateOptions2 = _interopRequireDefault(_templateOptions);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var typesTemplate = _lodash2.default.template(_fs2.default.readFileSync(_config2.default.typesTemplatePath), _templateOptions2.default);
+var typesTemplate = (0, _lodash.template)(_fs2.default.readFileSync(_config2.default.typesTemplatePath), _templateOptions2.default);
 
 module.exports = function (entities) {
     (0, _utils.mkDir)(_config2.default.typesPath);

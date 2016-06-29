@@ -16,8 +16,6 @@ var _path2 = _interopRequireDefault(_path);
 
 var _lodash = require('lodash');
 
-var _lodash2 = _interopRequireDefault(_lodash);
-
 var _config = require('./config');
 
 var _config2 = _interopRequireDefault(_config);
@@ -30,8 +28,9 @@ var _templateOptions2 = _interopRequireDefault(_templateOptions);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var reducerTemplate = _lodash2.default.template(_fs2.default.readFileSync(_config2.default.reducerTemplatePath), _templateOptions2.default);
-var indexTemplate = _lodash2.default.template(_fs2.default.readFileSync(_config2.default.reducersIndexTemplatePath), _templateOptions2.default);
+//TODO Namespaced, standard
+var reducerTemplate = (0, _lodash.template)(_fs2.default.readFileSync(_config2.default.reducerTemplatePath), _templateOptions2.default);
+var indexTemplate = (0, _lodash.template)(_fs2.default.readFileSync(_config2.default.reducersIndexTemplatePath), _templateOptions2.default);
 
 function createReducer(entity, options) {
     (0, _utils.mkDir)(entity.reducerFolder);

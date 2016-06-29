@@ -2,13 +2,14 @@
 
 import Fs from 'fs';
 import Path from 'path';
-import _ from 'lodash';
+import {template} from 'lodash';
 import config from './config';
 import {mkDir, relative} from './utils';
 import templateOptions  from './template-options';
 
-const reducerTemplate = _.template(Fs.readFileSync(config.reducerTemplatePath), templateOptions);
-const indexTemplate = _.template(Fs.readFileSync(config.reducersIndexTemplatePath), templateOptions);
+//TODO Namespaced, standard
+const reducerTemplate = template(Fs.readFileSync(config.reducerTemplatePath), templateOptions);
+const indexTemplate = template(Fs.readFileSync(config.reducersIndexTemplatePath), templateOptions);
 
 export function createReducer(entity, options) {
     mkDir(entity.reducerFolder);
