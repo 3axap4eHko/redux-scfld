@@ -12,7 +12,7 @@ import {
 } from '{typePath}';
 
 <% eachEntity(entities, entity => { %>
-import {entity.name} from './{entity.path}';
+import {entity.fullName}Action from './{entity.path}';
 <% } ) %>
 
 <% eachEntity(entities, entity => { %>
@@ -43,8 +43,8 @@ function create{entity.Name}Failure(error) {
 
 export const {entity.fullName} = (...args) => {
     return (dispatch, getState) => {
-        dispatch(create{entity.Name}Progress(...args));
-        return Promise.resolve( {entity.name}(getState, ...args) )
+        dispatch( create{entity.Name}Progress(...args) );
+        return Promise.resolve( {entity.fullName}Action(getState, ...args) )
             .then( result => dispatch(create{entity.Name}Success(result)) )
             .catch( error => dispatch(create{entity.Name}Failure(error)) );
     }
