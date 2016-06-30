@@ -31,9 +31,11 @@ export default function(state = defaultState, action) {
         if ( type in reducers[namespace] ) {
             const nextNamespaceState = reducers[namespace][type](prevNamespaceState, action);
             if (typeof nextNamespaceState === 'undefined') {
-                throw new Error(`State ${<%  %>namespace} can't be undefined`);
+                throw new Error(`State from ${<%  %>namespace}.${<%  %>type} cannot be undefined`);
             }
-            state = Object.assign({}, state, {[namespace]: nextNamespaceState});
+            if (prevNamespaceState !== nextNamespaceState) {
+                return {...state, ...{[namespace]: nextNamespaceState}};
+            }
         } else {
             throw new Error(`Entity ${<%  %>namespace}.${<%  %>type} not defined`);
         }

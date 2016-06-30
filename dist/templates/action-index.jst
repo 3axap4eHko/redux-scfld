@@ -16,7 +16,7 @@ import {entity.fullName}Action from './{entity.path}';
 <% } ) %>
 
 <% eachEntity(entities, entity => { %>
-function create{entity.Name}Progress(...args) {
+function create{entity.FullName}Progress(...args) {
     return {
         namespace: NAMESPACE.{entity.namespace},
         type: {entity.TYPE},
@@ -24,7 +24,7 @@ function create{entity.Name}Progress(...args) {
         args
     };
 }
-function create{entity.Name}Success(result) {
+function create{entity.FullName}Success(result) {
     return {
         namespace: NAMESPACE.{entity.namespace},
         type: {entity.TYPE},
@@ -32,7 +32,7 @@ function create{entity.Name}Success(result) {
         result
     };
 }
-function create{entity.Name}Failure(error) {
+function create{entity.FullName}Failure(error) {
     return {
         namespace: NAMESPACE.{entity.namespace},
         type: {entity.TYPE},
@@ -43,10 +43,10 @@ function create{entity.Name}Failure(error) {
 
 export const {entity.fullName} = (...args) => {
     return (dispatch, getState) => {
-        dispatch( create{entity.Name}Progress(...args) );
+        dispatch( create{entity.FullName}Progress(...args) );
         return Promise.resolve( {entity.fullName}Action(getState, ...args) )
-            .then( result => dispatch(create{entity.Name}Success(result)) )
-            .catch( error => dispatch(create{entity.Name}Failure(error)) );
+            .then( result => dispatch(create{entity.FullName}Success(result)) )
+            .catch( error => dispatch(create{entity.FullName}Failure(error)) );
     }
 };
 <% }) %>
