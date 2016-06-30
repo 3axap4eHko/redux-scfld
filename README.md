@@ -270,8 +270,16 @@ Entities = {
 ```
 
 ### Commands
+`$ redux config` - generates default config file `.reduxrc`
+
 `$ redux create` - creates Action, Type and Reducer and generates their indexes
+
 `$ redux idx` - regenerate indexes of Actions, Types and Reducers (does not affect already generated not indexes files)
+
+`$ redux ls` - displays list of entities
+
+`$ redux types` - displays list of types
+
 `$ redux help` - display help page
 
 ## License
