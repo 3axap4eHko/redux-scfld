@@ -9,7 +9,7 @@ import {
 <% eachEntity(entities, entity => { %>
     {entity.TYPE},
 <% }) %>
-} from '{typePath}';
+} from './{typePath}';
 
 <% eachEntity(entities, entity => { %>
 import {entity.fullName}Action from './{entity.path}';

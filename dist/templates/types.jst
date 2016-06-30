@@ -1,16 +1,19 @@
 {__warning_header}
 'use strict';
 
+// Statuses
 export const PROGRESS = 'PROGRESS';
 export const SUCCESS = 'SUCCESS';
 export const FAILURE = 'FAILURE';
 
+// Generated Namespaces
 export const NAMESPACE = {
 <% Object.keys(entities).forEach( namespace => { %>
     {namespace}: '{namespace}',
 <% } ) %>
 };
 
+// Generated Types
 <% eachEntity(entities, entity => { %>
 export const {entity.TYPE} = '{entity.TYPE}';
 <% } ) %>
