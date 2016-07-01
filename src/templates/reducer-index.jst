@@ -8,7 +8,7 @@ import {
 <% } ) %>
 } from './{typePath}';
 
-<% if (defaultStatePath) {%>import defaultState from '{defaultStatePath}';<% } else { %>const defaultState = {};<% } %>
+<% if (statesPath) {%>import defaultState from '{statesPath}';<% } else { %>const defaultState = {};<% } %>
 
 <% eachEntity(entities, entity => { %>
 import {entity.fullName} from './{entity.path}';

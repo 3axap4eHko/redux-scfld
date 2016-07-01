@@ -5,6 +5,7 @@ import Fs from 'fs';
 import {createAction, generateActionsIndex} from '../dist/action';
 import generateTypes from '../dist/types';
 import {createReducer, generateReducersIndex} from '../dist/reducer';
+import {createState, generateStatesIndex} from '../dist/state';
 import {getEntity, getEntities, eachEntity} from '../dist/utils';
 
 var [command, ...args] = process.argv.slice(2);
@@ -32,6 +33,7 @@ const commands = {
             actionsPath: './app/actions',
             reducersPath: './app/reducers',
             typesPath: './app/types',
+            statePath: './app/state',
             defaultStatePath: false
         };
         Fs.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '    '))
@@ -47,6 +49,9 @@ const commands = {
         createReducer(entity, options);
         generateReducersIndex(entities);
         console.log(`[Redux] Reducer created: ${entity.fullName}`);
+        createState(entity, options);
+        generateStatesIndex(entities);
+        console.log(`[Redux] State created: ${entity.namespace}`);
     },
     idx() {
         const entities = getEntities();
@@ -56,10 +61,16 @@ const commands = {
         console.log('[Redux] Types index generated');
         generateReducersIndex(entities);
         console.log('[Redux] Reducers index generated');
+        generateStatesIndex(entities);
+        console.log('[Redux] States index generated');
     },
     ls() {
         const entities = getEntities();
         eachEntity(entities, entity => console.log(`${entity.fullName}`));
+    },
+    ns() {
+        const entities = getEntities();
+        Object.keys(entities).forEach( namespace => console.log(`${namespace}`));
     },
     types() {
         const entities = getEntities();

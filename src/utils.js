@@ -56,7 +56,8 @@ export function getEntity(name) {
         actionFolder: Path.join(config.actionsPath, namespace).replace(slashReplaceExpr,'/'),
         actionPath: Path.join(config.actionsPath, namespace, filename).replace(slashReplaceExpr,'/'),
         reducerFolder: Path.join(config.reducersPath, namespace).replace(slashReplaceExpr,'/'),
-        reducerPath: Path.join(config.reducersPath, namespace, filename).replace(slashReplaceExpr,'/')
+        reducerPath: Path.join(config.reducersPath, namespace, filename).replace(slashReplaceExpr,'/'),
+        statePath: Path.join(config.statesPath, namespace).replace(slashReplaceExpr,'/') + '.js'
     };
 }
 

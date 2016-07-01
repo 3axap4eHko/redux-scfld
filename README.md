@@ -28,7 +28,9 @@ For example: `postsFetchPage`, `postsFetchFilter`, `postCreate` etc.
   "reducersIndexTemplatePath": "./node_modules/redux-scfld/dist/templates/reducer-index.jst",
   "typesPath": "./app/types",
   "typesTemplatePath": "./node_modules/redux-scfld/dist/templates/types.jst",
-  "defaultStatePath": "./app/state.js"
+  "statesPath": "./app/states",
+  "stateTemplatePath": "./node_modules/redux-scfld/dist/templates/state.jst",
+  "statesIndexTemplatePath": "./node_modules/redux-scfld/dist/templates/state-index.jst"
 }
 ```
 ### Action, Types and Reducer generation
@@ -53,6 +55,10 @@ $ redux create postsFetchPage
     |   \---posts
     |           fetch-page.js
     |           
+    +---state
+    |       index.js
+    |       posts.js
+    |
     \---types
             index.js
 ```
@@ -198,6 +204,9 @@ export default function(state = defaultState, action) {
 ```
 **IMPORTANT**: You should avoid editing of generated index files. See templates generation
 
+#### State
+
+State is represented by separate files for each namespace
 
 ### Store creation
 ``` javascript
@@ -236,7 +245,9 @@ store.dispatch(postsFetchPage());
   "reducersIndexTemplatePath": "./app/templates/reducer-index.jst",
   "typesPath": "./app/types",
   "typesTemplatePath": "./app/templates/types.jst",
-  "defaultStatePath": false
+  "statesPath": "./app/states",
+  "stateTemplatePath": "./app/templates/state.jst",
+  "statesIndexTemplatePath": "./app/templates/state-index.jst"
 }
 ```
 
@@ -256,7 +267,8 @@ Entity = {
     actionFolder,
     actionPath,
     reducerFolder,
-    reducerPath
+    reducerPath,
+    statePath
 }
 ```
 

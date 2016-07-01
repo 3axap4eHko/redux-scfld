@@ -16,6 +16,8 @@ var _types2 = _interopRequireDefault(_types);
 
 var _reducer = require('../dist/reducer');
 
+var _state = require('../dist/state');
+
 var _utils = require('../dist/utils');
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -58,6 +60,7 @@ var commands = {
             actionsPath: './app/actions',
             reducersPath: './app/reducers',
             typesPath: './app/types',
+            statePath: './app/state',
             defaultStatePath: false
         };
         _fs2.default.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '    '));
@@ -73,6 +76,9 @@ var commands = {
         (0, _reducer.createReducer)(entity, options);
         (0, _reducer.generateReducersIndex)(entities);
         console.log('[Redux] Reducer created: ' + entity.fullName);
+        (0, _state.createState)(entity, options);
+        (0, _state.generateStatesIndex)(entities);
+        console.log('[Redux] State created: ' + entity.namespace);
     },
     idx: function idx() {
         var entities = (0, _utils.getEntities)();
@@ -82,11 +88,19 @@ var commands = {
         console.log('[Redux] Types index generated');
         (0, _reducer.generateReducersIndex)(entities);
         console.log('[Redux] Reducers index generated');
+        (0, _state.generateStatesIndex)(entities);
+        console.log('[Redux] States index generated');
     },
     ls: function ls() {
         var entities = (0, _utils.getEntities)();
         (0, _utils.eachEntity)(entities, function (entity) {
             return console.log('' + entity.fullName);
+        });
+    },
+    ns: function ns() {
+        var entities = (0, _utils.getEntities)();
+        Object.keys(entities).forEach(function (namespace) {
+            return console.log('' + namespace);
         });
     },
     types: function types() {

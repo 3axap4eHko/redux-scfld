@@ -1,0 +1,12 @@
+{__warning_header}
+'use strict';
+
+<% Object.keys(entities).forEach( namespace => { %>
+import {namespace} from './{namespace}';
+<% } ) %>
+
+export default {
+<% Object.keys(entities).forEach( namespace => { %>
+    {namespace},
+<% } ) %>
+};

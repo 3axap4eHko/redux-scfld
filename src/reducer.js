@@ -27,7 +27,7 @@ export function generateReducersIndex(entities) {
     const content = indexTemplate({
         entities,
         typePath: relative(config.reducersPath, config.typesPath),
-        defaultStatePath: config.defaultStatePath ? relative(config.reducersPath, config.defaultStatePath) : false
+        statesPath: config.statesPath ? relative(config.reducersPath, config.statesPath) : false
     });
     Fs.writeFileSync(Path.join(config.reducersPath, 'index.js'), content);
 }

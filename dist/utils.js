@@ -100,7 +100,8 @@ function getEntity(name) {
         actionFolder: _path2.default.join(_config2.default.actionsPath, namespace).replace(slashReplaceExpr, '/'),
         actionPath: _path2.default.join(_config2.default.actionsPath, namespace, filename).replace(slashReplaceExpr, '/'),
         reducerFolder: _path2.default.join(_config2.default.reducersPath, namespace).replace(slashReplaceExpr, '/'),
-        reducerPath: _path2.default.join(_config2.default.reducersPath, namespace, filename).replace(slashReplaceExpr, '/')
+        reducerPath: _path2.default.join(_config2.default.reducersPath, namespace, filename).replace(slashReplaceExpr, '/'),
+        statePath: _path2.default.join(_config2.default.statesPath, namespace).replace(slashReplaceExpr, '/') + '.js'
     };
 }
 

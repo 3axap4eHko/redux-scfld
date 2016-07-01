@@ -48,7 +48,7 @@ function generateReducersIndex(entities) {
     var content = indexTemplate({
         entities: entities,
         typePath: (0, _utils.relative)(_config2.default.reducersPath, _config2.default.typesPath),
-        defaultStatePath: _config2.default.defaultStatePath ? (0, _utils.relative)(_config2.default.reducersPath, _config2.default.defaultStatePath) : false
+        statesPath: _config2.default.statesPath ? (0, _utils.relative)(_config2.default.reducersPath, _config2.default.statesPath) : false
     });
     _fs2.default.writeFileSync(_path2.default.join(_config2.default.reducersPath, 'index.js'), content);
 }

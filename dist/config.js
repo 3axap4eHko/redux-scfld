@@ -23,7 +23,9 @@ var defaultConfig = {
     reducersIndexTemplatePath: _path2.default.join(__dirname, 'templates', 'reducer-index.jst'),
     typesPath: './app/types',
     typesTemplatePath: _path2.default.join(__dirname, 'templates', 'types.jst'),
-    defaultStatePath: false
+    statesPath: './app/states',
+    stateTemplatePath: _path2.default.join(__dirname, 'templates', 'state.jst'),
+    statesIndexTemplatePath: _path2.default.join(__dirname, 'templates', 'state-index.jst')
 };
 
 exports.default = Object.freeze(Object.assign({}, defaultConfig, _fs2.default.existsSync('./.reduxrc') ? JSON.parse(_fs2.default.readFileSync('./.reduxrc', 'utf8')) : {}));

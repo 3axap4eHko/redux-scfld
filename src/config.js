@@ -12,7 +12,9 @@ const defaultConfig = {
     reducersIndexTemplatePath: Path.join(__dirname, 'templates', 'reducer-index.jst'),
     typesPath: './app/types',
     typesTemplatePath: Path.join(__dirname, 'templates', 'types.jst'),
-    defaultStatePath: false
+    statesPath: './app/states',
+    stateTemplatePath: Path.join(__dirname, 'templates', 'state.jst'),
+    statesIndexTemplatePath: Path.join(__dirname, 'templates', 'state-index.jst')
 };
 
 export default Object.freeze(Object.assign({}, defaultConfig, Fs.existsSync('./.reduxrc') ? JSON.parse(Fs.readFileSync('./.reduxrc', 'utf8')) : {}));
