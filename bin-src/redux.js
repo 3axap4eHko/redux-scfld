@@ -34,8 +34,7 @@ const commands = {
             actionsPath: './app/actions',
             reducersPath: './app/reducers',
             typesPath: './app/types',
-            statePath: './app/state',
-            defaultStatePath: false
+            statesPath: './app/states'
         };
         Fs.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '    '))
     },

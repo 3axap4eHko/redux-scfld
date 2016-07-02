@@ -61,8 +61,7 @@ var commands = {
             actionsPath: './app/actions',
             reducersPath: './app/reducers',
             typesPath: './app/types',
-            statePath: './app/state',
-            defaultStatePath: false
+            statesPath: './app/states'
         };
         _fs2.default.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '    '));
     },
