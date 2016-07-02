@@ -18,7 +18,8 @@ export function createReducer(entity, options) {
     }
     const content = reducerTemplate({
         entity,
-        typePath: relative(entity.reducerFolder, config.typesPath)
+        typePath: relative(entity.reducerFolder, config.typesPath),
+        statePath: relative(entity.reducerFolder, entity.statePath)
     });
     Fs.writeFileSync(entity.reducerPath, content);
 }

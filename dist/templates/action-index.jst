@@ -3,7 +3,7 @@
 
 import {
     NAMESPACE,
-    PROGRESS,
+    PROCESS,
     SUCCESS,
     FAILURE,
 <% eachEntity(entities, entity => { %>
@@ -16,11 +16,11 @@ import {entity.fullName}Action from './{entity.path}';
 <% } ) %>
 
 <% eachEntity(entities, entity => { %>
-function create{entity.FullName}Progress(...args) {
+function create{entity.FullName}PROCESS(...args) {
     return {
         namespace: NAMESPACE.{entity.namespace},
         type: {entity.TYPE},
-        status: PROGRESS,
+        status: PROCESS,
         args
     };
 }
@@ -43,7 +43,7 @@ function create{entity.FullName}Failure(error) {
 
 export const {entity.fullName} = (...args) => {
     return (dispatch, getState) => {
-        dispatch( create{entity.FullName}Progress(...args) );
+        dispatch( create{entity.FullName}PROCESS(...args) );
         return Promise.resolve( {entity.fullName}Action(getState, ...args) )
             .then( result => dispatch(create{entity.FullName}Success(result)) )
             .catch( error => dispatch(create{entity.FullName}Failure(error)) );

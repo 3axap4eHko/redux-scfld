@@ -11,9 +11,9 @@ describe('Scaffold test suite:', () => {
         const store = createStore();
         const unsubscribe = store.subscribe(() => {
             const state = store.getState().test;
-            if ('progress' in state) {
+            if ('process' in state) {
                 expect(state.defaultValue).toEqual(defaultValue, 'testing default value');
-                expect(state.progress).toBeTruthy();
+                expect(state.process).toBeTruthy();
                 unsubscribe();
                 done();
             }
@@ -27,7 +27,7 @@ describe('Scaffold test suite:', () => {
             if ('result' in state) {
                 expect(state.defaultValue).toEqual(defaultValue, 'testing default value');
                 expect(state.result).toEqual('test', 'testing result value');
-                expect(state.progress).toBeFalsy();
+                expect(state.process).toBeFalsy();
                 unsubscribe();
                 done();
             }
@@ -41,7 +41,7 @@ describe('Scaffold test suite:', () => {
             if ('error' in state) {
                 expect(state.defaultValue).toEqual(defaultValue, 'testing default value');
                 expect(state.error instanceof Error).toBeTruthy();
-                expect(state.progress).toBeFalsy();
+                expect(state.process).toBeFalsy();
                 unsubscribe();
                 done();
             }

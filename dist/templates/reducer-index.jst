@@ -8,8 +8,6 @@ import {
 <% } ) %>
 } from './{typePath}';
 
-<% if (statesPath) {%>import defaultState from '{statesPath}';<% } else { %>const defaultState = {};<% } %>
-
 <% eachEntity(entities, entity => { %>
 import {entity.fullName} from './{entity.path}';
 <% } ) %>
@@ -24,9 +22,9 @@ const reducers = {
 <% } ) %>
 };
 
-export default function(state = defaultState, action) {
+export default function(state = {}, action) {
     const {namespace, type} = action;
-    if ( state && namespace in state && namespace in reducers ) {
+    if ( state && namespace in reducers ) {
         const prevNamespaceState = state[namespace];
         if ( type in reducers[namespace] ) {
             const nextNamespaceState = reducers[namespace][type](prevNamespaceState, action);

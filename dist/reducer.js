@@ -39,7 +39,8 @@ function createReducer(entity, options) {
     }
     var content = reducerTemplate({
         entity: entity,
-        typePath: (0, _utils.relative)(entity.reducerFolder, _config2.default.typesPath)
+        typePath: (0, _utils.relative)(entity.reducerFolder, _config2.default.typesPath),
+        statePath: (0, _utils.relative)(entity.reducerFolder, entity.statePath)
     });
     _fs2.default.writeFileSync(entity.reducerPath, content);
 }

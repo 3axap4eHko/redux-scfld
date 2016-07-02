@@ -2,28 +2,30 @@
 'use strict';
 
 import {
-    PROGRESS,
+    PROCESS,
     SUCCESS,
     FAILURE,
 } from './{typePath}';
 
-export default function(state, action) {
+import defaultState from './{statePath}';
+
+export default function(state = defaultState, action) {
     switch(action.status) {
-        case PROGRESS:
+        case PROCESS:
             return {
                 ...state,
-                progress: true
+                process: true
             };
         case SUCCESS:
             return {
                 ...state,
-                progress: false,
+                process: false,
                 result: action.result
             };
         case FAILURE:
             return {
                 ...state,
-                progress: false,
+                process: false,
                 error: action.error
             };
     }

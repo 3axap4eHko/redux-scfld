@@ -76,7 +76,7 @@ export default function(getState, ...args) {
 ``` javascript
 import {
     NAMESPACE,
-    PROGRESS,
+    PROCESS,
     SUCCESS,
     FAILURE,
 
@@ -85,11 +85,11 @@ import {
 
 import postsFetchPageAction from './posts/fetch-page.js';
 
-function createPostsFetchPageProgress(...args) {
+function createPostsFetchPagePROCESS(...args) {
     return {
         namespace: NAMESPACE.posts,
         type: POSTS_FETCH_PAGE,
-        status: PROGRESS,
+        status: PROCESS,
         args
     };
 }
@@ -112,7 +112,7 @@ function createPostsFetchPageFailure(error) {
 
 export const postsFetchPage = (...args) => {
     return (dispatch, getState) => {
-        dispatch( createPostsFetchPageProgress(...args) );
+        dispatch( createPostsFetchPagePROCESS(...args) );
         return Promise.resolve( postsFetchPageAction(getState, ...args) )
             .then( result => dispatch(createPostsFetchPageSuccess(result)) )
             .catch( error => dispatch(createPostsFetchPageFailure(error)) );
@@ -120,14 +120,14 @@ export const postsFetchPage = (...args) => {
 };
 ```
 
-**IMPORTANT**: Instead of original Redux actions, Redux Scaffold Actions has only one `type`, but one `namespace` and 3 `statuses`: `PROGRESS`, `SUCCESS`, `FAILURE`
+**IMPORTANT**: Instead of original Redux actions, Redux Scaffold Actions has only one `type`, but one `namespace` and 3 `statuses`: `PROCESS`, `SUCCESS`, `FAILURE`
 
 **IMPORTANT**: You should avoid editing of generated index files. See templates generation
 
 #### Types
 ``` javascript
 // Statuses
-export const PROGRESS = 'PROGRESS';
+export const PROCESS = 'PROCESS';
 export const SUCCESS = 'SUCCESS';
 export const FAILURE = 'FAILURE';
 
@@ -143,14 +143,16 @@ export const POSTS_FETCH_PAGE = 'POSTS_FETCH_PAGE';
 `app/reducers/posts/fetch-page.js` contains
 ``` javascript
 import {
-    PROGRESS,
+    PROCESS,
     SUCCESS,
     FAILURE,
 } from './../../types';
 
-export default function(state, action) {
+import defaultState from './../../states/posts';
+
+export default function(state = defaultState, action) {
     switch(action.status) {
-        case PROGRESS:
+        case PROCESS:
             break;
         case SUCCESS:
             break;
@@ -160,8 +162,6 @@ export default function(state, action) {
     return state;
 };
 ```
-**IMPORTANT**: You don't need to initialize reducer state, instead of that see config value `defaultState`
-
 `app/reducers/index.js` contains
 ``` javascript
 import {
@@ -169,8 +169,6 @@ import {
 
     POSTS_FETCH_PAGE
 } from './../types';
-
-import defaultState from '../../state';
 
 import postsFetchPage from './posts/fetch-page.js';
 
@@ -183,9 +181,9 @@ const reducers = {
     },
 };
 
-export default function(state = defaultState, action) {
+export default function(state = {}, action) {
     const {namespace, type} = action;
-    if ( state && namespace in state && namespace in reducers ) {
+    if ( state && namespace in reducers ) {
         const prevNamespaceState = state[namespace];
         if ( type in reducers[namespace] ) {
             const nextNamespaceState = reducers[namespace][type](prevNamespaceState, action);
@@ -206,9 +204,11 @@ export default function(state = defaultState, action) {
 
 #### State
 
-State is represented by separate files for each namespace
+State is represented by separate files for each namespace and will be generated automatically for each namespace.
+
 
 ### Store creation
+Create file `/app/store.js`
 ``` javascript
 import thunkMiddleware from 'redux-thunk';
 import {createStore, applyMiddleware} from 'redux';
@@ -286,9 +286,11 @@ Entities = {
 
 `$ redux create` - creates Action, Type and Reducer and generates their indexes
 
-`$ redux idx` - regenerate indexes of Actions, Types and Reducers (does not affect already generated not indexes files)
+`$ redux update` - regenerate indexes of Actions, Types and Reducers (does not affect already generated not indexes files)
 
 `$ redux ls` - displays list of entities
+
+`$ redux ns` - displays list of namespaces
 
 `$ redux types` - displays list of types
 

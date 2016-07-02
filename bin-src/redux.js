@@ -22,8 +22,9 @@ const commands = {
         console.log('commands:');
         console.log('config                         init config');
         console.log('create [actionName] [options]  creates action, reducer and type');
-        console.log('idx                            recalculate index files of actions, reducers and types');
-        console.log('ls                             list entities');
+        console.log('update                         updates index files of actions, reducers and types');
+        console.log('ls                             list of entities');
+        console.log('ns                             list of namespaces');
         console.log('types                          list types');
         console.log('\t options:');
         console.log('-f, --force  force action');
@@ -53,7 +54,7 @@ const commands = {
         generateStatesIndex(entities);
         console.log(`[Redux] State created: ${entity.namespace}`);
     },
-    idx() {
+    update() {
         const entities = getEntities();
         generateActionsIndex(entities);
         console.log('[Redux] Actions index generated');
