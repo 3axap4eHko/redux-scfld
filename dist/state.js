@@ -41,9 +41,7 @@ function createState(entity) {
 
 function generateStatesIndex(entities) {
     (0, _utils.mkDir)(_config2.default.statesPath);
-    var content = indexTemplate({
-        entities: entities
-    });
+    var content = indexTemplate({ entities: entities });
     _fs2.default.writeFileSync(_path2.default.join(_config2.default.statesPath, 'index.js'), content);
     return entities;
 }

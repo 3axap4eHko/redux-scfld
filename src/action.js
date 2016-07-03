@@ -5,7 +5,7 @@ import Path from 'path';
 import {template} from 'lodash';
 
 import config from './config';
-import {mkDir, relative} from './utils';
+import {mkDir} from './utils';
 import templateOptions  from './template-options';
 
 const actionTemplate = template(Fs.readFileSync(config.actionTemplatePath), templateOptions);
@@ -22,10 +22,7 @@ export function createAction(entity, options) {
 
 export function generateActionsIndex(entities) {
     mkDir(config.actionsPath);
-    const content = indexTemplate({
-        entities,
-        typePath: relative(config.actionsPath, config.typesPath)
-    });
+    const content = indexTemplate({entities});
     Fs.writeFileSync(Path.join(config.actionsPath, 'index.js'), content);
     return entities;
 }

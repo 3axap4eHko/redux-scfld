@@ -28,7 +28,6 @@ var _templateOptions2 = _interopRequireDefault(_templateOptions);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//TODO Namespaced, standard
 var reducerTemplate = (0, _lodash.template)(_fs2.default.readFileSync(_config2.default.reducerTemplatePath), _templateOptions2.default);
 var indexTemplate = (0, _lodash.template)(_fs2.default.readFileSync(_config2.default.reducersIndexTemplatePath), _templateOptions2.default);
 
@@ -37,19 +36,11 @@ function createReducer(entity, options) {
     if (_fs2.default.existsSync(entity.reducerPath) && !options.force) {
         throw new Error('Reducer \'' + entity.fullName + '\' already exists');
     }
-    var content = reducerTemplate({
-        entity: entity,
-        typePath: (0, _utils.relative)(entity.reducerFolder, _config2.default.typesPath),
-        statePath: (0, _utils.relative)(entity.reducerFolder, entity.statePath)
-    });
+    var content = reducerTemplate({ entity: entity });
     _fs2.default.writeFileSync(entity.reducerPath, content);
 }
 function generateReducersIndex(entities) {
     (0, _utils.mkDir)(_config2.default.reducersPath);
-    var content = indexTemplate({
-        entities: entities,
-        typePath: (0, _utils.relative)(_config2.default.reducersPath, _config2.default.typesPath),
-        statesPath: _config2.default.statesPath ? (0, _utils.relative)(_config2.default.reducersPath, _config2.default.statesPath) : false
-    });
+    var content = indexTemplate({ entities: entities });
     _fs2.default.writeFileSync(_path2.default.join(_config2.default.reducersPath, 'index.js'), content);
 }

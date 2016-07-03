@@ -1,6 +1,8 @@
 Redux Scaffold Generator
 ====================
 
+**DISCLAIMER** this package is under development and api or templates may be changed
+
 ## Install
  $ npm install -g redux-scfld
 
@@ -75,67 +77,74 @@ export default function(getState, ...args) {
 `app/actions/index.js` contains
 ``` javascript
 import {
-    NAMESPACE,
-    PROCESS,
-    SUCCESS,
-    FAILURE,
-
+    STATUS_PROCESS,
+    STATUS_SUCCESS,
+    STATUS_FAILURE,
+    // Namespaces
+    NAMESPACE_POSTS,
+    // Types
     POSTS_FETCH_PAGE
 } from './../types';
 
 import postsFetchPageAction from './posts/fetch-page.js';
 
-function createPostsFetchPagePROCESS(...args) {
+function _createProcess(namespace, type, ...args) {
     return {
-        namespace: NAMESPACE.posts,
-        type: POSTS_FETCH_PAGE,
-        status: PROCESS,
+        namespace,
+        type,
+        status: STATUS_PROCESS,
         args
     };
 }
-function createPostsFetchPageSuccess(result) {
+function _createSuccess(namespace, type, result) {
     return {
-        namespace: NAMESPACE.posts,
-        type: POSTS_FETCH_PAGE,
-        status: SUCCESS,
+        namespace,
+        type,
+        status: STATUS_SUCCESS,
         result
     };
 }
-function createPostsFetchPageFailure(error) {
+function _createFailure(namespace, type, error, args) {
     return {
-        namespace: NAMESPACE.posts,
-        type: POSTS_FETCH_PAGE,
-        status: FAILURE,
+        namespace,
+        type,
+        status: STATUS_FAILURE,
+        args,
         error
     };
 }
 
-export const postsFetchPage = (...args) => {
-    return (dispatch, getState) => {
-        dispatch( createPostsFetchPagePROCESS(...args) );
-        return Promise.resolve( postsFetchPageAction(getState, ...args) )
-            .then( result => dispatch(createPostsFetchPageSuccess(result)) )
-            .catch( error => dispatch(createPostsFetchPageFailure(error)) );
+function _createAction(namespace, type, action) {
+    return (...args) => {
+        return (dispatch, getState) => {
+            dispatch(_createProcess(namespace, type, ...args));
+            return Promise.resolve(action(getState, ...args))
+                .then(result => dispatch(_createSuccess(namespace, type, result)))
+                .catch(error => dispatch(_createFailure(namespace, type, error, args)));
+        }
     }
-};
+}
+
+export const testFailure = _createAction(NAMESPACE_POSTS, POSTS_FETCH_PAGE, postsFetchPageAction);
 ```
 
-**IMPORTANT**: Instead of original Redux actions, Redux Scaffold Actions has only one `type`, but one `namespace` and 3 `statuses`: `PROCESS`, `SUCCESS`, `FAILURE`
+**IMPORTANT**: Instead of original Redux actions, Redux Scaffold Actions has only one `type`, but one `namespace` and 3 `statuses`: `STATUS_PROCESS`, `STATUS_SUCCESS`, `STATUS_FAILURE`
 
 **IMPORTANT**: You should avoid editing of generated index files. See templates generation
 
 #### Types
 ``` javascript
 // Statuses
-export const PROCESS = 'PROCESS';
-export const SUCCESS = 'SUCCESS';
-export const FAILURE = 'FAILURE';
+export const STATUS_PROCESS = 'STATUS_PROCESS';
+export const STATUS_SUCCESS = 'STATUS_SUCCESS';
+export const STATUS_FAILURE = 'STATUS_FAILURE';
 
 // Generated Namespaces
-export const NAMESPACE = {
-    posts: 'posts'
-};
+export const NAMESPACE_TEST = 'test';
 
+export const NAMESPACES = [
+    NAMESPACE_TEST
+];
 // Generated types
 export const POSTS_FETCH_PAGE = 'POSTS_FETCH_PAGE';
 ```
@@ -143,20 +152,20 @@ export const POSTS_FETCH_PAGE = 'POSTS_FETCH_PAGE';
 `app/reducers/posts/fetch-page.js` contains
 ``` javascript
 import {
-    PROCESS,
-    SUCCESS,
-    FAILURE,
+    STATUS_PROCESS,
+    STATUS_SUCCESS,
+    STATUS_FAILURE,
 } from './../../types';
 
 import defaultState from './../../states/posts';
 
 export default function(state = defaultState, action) {
     switch(action.status) {
-        case PROCESS:
+        case STATUS_PROCESS:
             break;
-        case SUCCESS:
+        case STATUS_SUCCESS:
             break;
-        case FAILURE:
+        case STATUS_FAILURE:
             break;
     }
     return state;
@@ -164,34 +173,27 @@ export default function(state = defaultState, action) {
 ```
 `app/reducers/index.js` contains
 ``` javascript
-import {
-    NAMESPACE,
-
-    POSTS_FETCH_PAGE
-} from './../types';
-
 import postsFetchPage from './posts/fetch-page.js';
 
-const reducers = {
+const namespaceReducersMap = {
 
-    [NAMESPACE.posts]: {
-
-        [POSTS_FETCH_PAGE]: postsFetchPage,
-
+    posts: {
+        POSTS_FETCH_PAGE: postsFetchPage,
     },
+
 };
 
 export default function(state = {}, action) {
     const {namespace, type} = action;
-    if ( state && namespace in reducers ) {
+    if ( state && namespace in namespaceReducersMap ) {
         const prevNamespaceState = state[namespace];
-        if ( type in reducers[namespace] ) {
-            const nextNamespaceState = reducers[namespace][type](prevNamespaceState, action);
+        if ( type in namespaceReducersMap[namespace] ) {
+            const nextNamespaceState = namespaceReducersMap[namespace][type](prevNamespaceState, action);
             if (typeof nextNamespaceState === 'undefined') {
                 throw new Error(`State from ${namespace}.${type} cannot be undefined`);
             }
             if (prevNamespaceState !== nextNamespaceState) {
-                return {...state, ...{[namespace]: nextNamespaceState}};
+                return { ...state, [namespace]: nextNamespaceState };
             }
         } else {
             throw new Error(`Entity ${namespace}.${type} not defined`);
@@ -210,16 +212,12 @@ State is represented by separate files for each namespace and will be generated 
 ### Store creation
 Create file `/app/store.js`
 ``` javascript
+import { createStore, applyMiddleware } from 'redux';
 import thunkMiddleware from 'redux-thunk';
-import {createStore, applyMiddleware} from 'redux';
 import reducers from './reducers';
 
-export default function (initialState) {
-    return createStore(reducers,
-        initialState,
-        applyMiddleware(
-            thunkMiddleware
-        ));
+export default function () {
+    return createStore(reducers, applyMiddleware(thunkMiddleware));
 }
 ```
 
@@ -257,6 +255,7 @@ Entity interface
 ``` javascript
 Entity = {
     namespace,
+    NAMESPACE,
     fullName,
     FullName,
     name,

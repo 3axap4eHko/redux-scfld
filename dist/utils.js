@@ -14,6 +14,7 @@ exports.getName = getName;
 exports.getEntity = getEntity;
 exports.getEntities = getEntities;
 exports.eachEntity = eachEntity;
+exports.mapEntity = mapEntity;
 
 var _fs = require('fs');
 
@@ -90,6 +91,7 @@ function getEntity(name) {
     var filename = getFilename(baseName);
     return {
         namespace: namespace,
+        NAMESPACE: namespace.toUpperCase(),
         fullName: name,
         FullName: (0, _lodash.upperFirst)(name),
         name: (0, _lodash.lowerFirst)(baseName),
@@ -123,4 +125,12 @@ function eachEntity(entities, callback) {
             callback(entities[namespace][name], name, namespace, entities);
         });
     });
+}
+
+function mapEntity(entities, callback) {
+    return Object.keys(entities).reduce(function (result, namespace) {
+        return result.concat(Object.keys(entities[namespace]).map(function (name) {
+            return callback(entities[namespace][name], name, namespace, entities);
+        }));
+    }, []);
 }

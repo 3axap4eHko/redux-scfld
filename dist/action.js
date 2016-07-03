@@ -42,10 +42,7 @@ function createAction(entity, options) {
 
 function generateActionsIndex(entities) {
     (0, _utils.mkDir)(_config2.default.actionsPath);
-    var content = indexTemplate({
-        entities: entities,
-        typePath: (0, _utils.relative)(_config2.default.actionsPath, _config2.default.typesPath)
-    });
+    var content = indexTemplate({ entities: entities });
     _fs2.default.writeFileSync(_path2.default.join(_config2.default.actionsPath, 'index.js'), content);
     return entities;
 }

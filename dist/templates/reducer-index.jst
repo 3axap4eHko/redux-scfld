@@ -1,38 +1,32 @@
 {__warning_header}
 'use strict';
+<%
+    const importReducers    = mapEntity(entities, entity => `import ${entity.fullName} from './${entity.path}';` ).join('\n');
+%>
+{importReducers}
 
-import {
-    NAMESPACE,
-<% eachEntity(entities, entity => { %>
-    {entity.TYPE},
-<% } ) %>
-} from './{typePath}';
-
-<% eachEntity(entities, entity => { %>
-import {entity.fullName} from './{entity.path}';
-<% } ) %>
-
-const reducers = {
-<% _.forEach(entities, (group, namespace) => { %>
-    [NAMESPACE.{namespace}]: {
-<% _.forEach(group, entity => { %>
-        [{entity.TYPE}]: {entity.fullName},
-<% } ) %>
+const namespaceReducersMap = {
+<%
+    _.forEach(entities, (group, namespace) => {
+        const mappedReducers = _.map(group, entity => `${entity.TYPE}: ${entity.fullName}` ).join(',\n        ');
+%>
+    {namespace}: {
+        {mappedReducers}
     },
 <% } ) %>
 };
 
 export default function(state = {}, action) {
     const {namespace, type} = action;
-    if ( state && namespace in reducers ) {
+    if ( state && namespace in namespaceReducersMap ) {
         const prevNamespaceState = state[namespace];
-        if ( type in reducers[namespace] ) {
-            const nextNamespaceState = reducers[namespace][type](prevNamespaceState, action);
+        if ( type in namespaceReducersMap[namespace] ) {
+            const nextNamespaceState = namespaceReducersMap[namespace][type](prevNamespaceState, action);
             if (typeof nextNamespaceState === 'undefined') {
                 throw new Error(`State from ${<%  %>namespace}.${<%  %>type} cannot be undefined`);
             }
             if (prevNamespaceState !== nextNamespaceState) {
-                return {...state, ...{[namespace]: nextNamespaceState}};
+                return { ...state, [namespace]: nextNamespaceState };
             }
         } else {
             throw new Error(`Entity ${<%  %>namespace}.${<%  %>type} not defined`);

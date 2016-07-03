@@ -46,6 +46,7 @@ export function getEntity(name) {
     const filename = getFilename(baseName);
     return {
         namespace,
+        NAMESPACE: namespace.toUpperCase(),
         fullName: name,
         FullName: upperFirst(name),
         name: lowerFirst(baseName),
@@ -79,4 +80,12 @@ export function eachEntity(entities, callback) {
             callback(entities[namespace][name], name, namespace, entities);
         })
     });
+}
+
+export function mapEntity(entities, callback) {
+    return Object.keys(entities).reduce( (result, namespace) => {
+        return result.concat(Object.keys(entities[namespace]).map( name => {
+            return callback(entities[namespace][name], name, namespace, entities);
+        }))
+    }, []);
 }

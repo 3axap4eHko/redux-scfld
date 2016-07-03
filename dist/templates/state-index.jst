@@ -1,12 +1,11 @@
 {__warning_header}
 'use strict';
-
-<% Object.keys(entities).forEach( namespace => { %>
-import {namespace} from './{namespace}';
-<% } ) %>
+<%
+    const importStates = Object.keys(entities).map( namespace => `import ${namespace} from './${namespace}';` ).join('\n');
+    const exportStates = Object.keys(entities).join(',\n    ');
+%>
+{importStates}
 
 export default {
-<% Object.keys(entities).forEach( namespace => { %>
-    {namespace},
-<% } ) %>
+    {exportStates}
 };

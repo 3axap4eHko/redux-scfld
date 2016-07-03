@@ -21,9 +21,7 @@ export function createState(entity) {
 
 export function generateStatesIndex(entities) {
     mkDir(config.statesPath);
-    const content = indexTemplate({
-        entities
-    });
+    const content = indexTemplate({entities});
     Fs.writeFileSync(Path.join(config.statesPath, 'index.js'), content);
     return entities;
 }

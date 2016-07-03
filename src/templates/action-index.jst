@@ -1,52 +1,60 @@
 {__warning_header}
 'use strict';
+<%
+    const typesPath         = relative(config.actionsPath, config.typesPath);
+    const importNamespaces  = Object.keys(entities).map( namespace => `NAMESPACE_${namespace.toUpperCase()}`).join('\n,    ');
+    const importTypes       = mapEntity(entities, entity => entity.TYPE ).join(',\n    ');
+    const importActions     = mapEntity(entities, entity => `import ${entity.fullName}Action from './${entity.path}';` ).join('\n');
+%>
 
 import {
-    NAMESPACE,
-    PROCESS,
-    SUCCESS,
-    FAILURE,
-<% eachEntity(entities, entity => { %>
-    {entity.TYPE},
-<% }) %>
-} from './{typePath}';
+    STATUS_PROCESS,
+    STATUS_SUCCESS,
+    STATUS_FAILURE,
+    // Namespaces
+    {importNamespaces},
+    // Types
+    {importTypes}
+} from './{typesPath}';
 
-<% eachEntity(entities, entity => { %>
-import {entity.fullName}Action from './{entity.path}';
-<% } ) %>
+{importActions}
 
-<% eachEntity(entities, entity => { %>
-function create{entity.FullName}PROCESS(...args) {
+function _createProcess(namespace, type, ...args) {
     return {
-        namespace: NAMESPACE.{entity.namespace},
-        type: {entity.TYPE},
-        status: PROCESS,
+        namespace,
+        type,
+        status: STATUS_PROCESS,
         args
     };
 }
-function create{entity.FullName}Success(result) {
+function _createSuccess(namespace, type, result) {
     return {
-        namespace: NAMESPACE.{entity.namespace},
-        type: {entity.TYPE},
-        status: SUCCESS,
+        namespace,
+        type,
+        status: STATUS_SUCCESS,
         result
     };
 }
-function create{entity.FullName}Failure(error) {
+function _createFailure(namespace, type, error, args) {
     return {
-        namespace: NAMESPACE.{entity.namespace},
-        type: {entity.TYPE},
-        status: FAILURE,
+        namespace,
+        type,
+        status: STATUS_FAILURE,
+        args,
         error
     };
 }
 
-export const {entity.fullName} = (...args) => {
-    return (dispatch, getState) => {
-        dispatch( create{entity.FullName}PROCESS(...args) );
-        return Promise.resolve( {entity.fullName}Action(getState, ...args) )
-            .then( result => dispatch(create{entity.FullName}Success(result)) )
-            .catch( error => dispatch(create{entity.FullName}Failure(error)) );
+function _createAction(namespace, type, action) {
+    return (...args) => {
+        return (dispatch, getState) => {
+            dispatch(_createProcess(namespace, type, ...args));
+            return Promise.resolve(action(getState, ...args))
+                .then(result => dispatch(_createSuccess(namespace, type, result)))
+                .catch(error => dispatch(_createFailure(namespace, type, error, args)));
+        }
     }
-};
+}
+<% eachEntity(entities, entity => { %>
+export const {entity.fullName} = _createAction(NAMESPACE_{entity.NAMESPACE}, {entity.TYPE}, {entity.fullName}Action);
 <% }) %>
