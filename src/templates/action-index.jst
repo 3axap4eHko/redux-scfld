@@ -2,7 +2,7 @@
 'use strict';
 <%
     const typesPath         = relative(config.actionsPath, config.typesPath);
-    const importNamespaces  = Object.keys(entities).map( namespace => `NAMESPACE_${namespace.toUpperCase()}`).join('\n,    ');
+    const importNamespaces  = Object.keys(entities).map( namespace => `NAMESPACE_${namespace.toUpperCase()}`).join(',\n    ');
     const importTypes       = mapEntity(entities, entity => entity.TYPE ).join(',\n    ');
     const importActions     = mapEntity(entities, entity => `import ${entity.fullName}Action from './${entity.path}';` ).join('\n');
 %>
