@@ -1,20 +1,20 @@
 'use strict';
 
 import Fs from 'fs';
-import Path from 'path';
+import {join} from './utils';
 
-const defaultConfig = {
+export const defaultConfig = Object.freeze({
     actionsPath: './app/actions',
-    actionTemplatePath: Path.join(__dirname, 'templates', 'action.jst'),
-    actionsIndexTemplatePath: Path.join(__dirname, 'templates', 'action-index.jst'),
+    actionTemplatePath: join(__dirname, 'templates', 'action.jst'),
+    actionsIndexTemplatePath: join(__dirname, 'templates', 'action-index.jst'),
     reducersPath: './app/reducers',
-    reducerTemplatePath: Path.join(__dirname, 'templates', 'reducer.jst'),
-    reducersIndexTemplatePath: Path.join(__dirname, 'templates', 'reducer-index.jst'),
+    reducerTemplatePath: join(__dirname, 'templates', 'reducer.jst'),
+    reducersIndexTemplatePath: join(__dirname, 'templates', 'reducer-index.jst'),
     typesPath: './app/types',
-    typesTemplatePath: Path.join(__dirname, 'templates', 'types.jst'),
+    typesTemplatePath: join(__dirname, 'templates', 'types.jst'),
     statesPath: './app/states',
-    stateTemplatePath: Path.join(__dirname, 'templates', 'state.jst'),
-    statesIndexTemplatePath: Path.join(__dirname, 'templates', 'state-index.jst')
-};
+    stateTemplatePath: join(__dirname, 'templates', 'state.jst'),
+    statesIndexTemplatePath: join(__dirname, 'templates', 'state-index.jst')
+});
 
-export default Object.freeze(Object.assign({}, defaultConfig, Fs.existsSync('./.reduxrc') ? JSON.parse(Fs.readFileSync('./.reduxrc', 'utf8')) : {}));
+export const loadedConfig = Object.freeze(Object.assign({}, defaultConfig, Fs.existsSync('./.reduxrc') ? JSON.parse(Fs.readFileSync('./.reduxrc', 'utf8')) : {}));

@@ -295,6 +295,10 @@ Entities = {
 
 `$ redux help` - display help page
 
+### Demo project
+
+(Powered by redux-scfld: React-Redux demo)[https://github.com/3axap4eHko/react-redux-demo]
+
 ## License
 [The MIT License](http://opensource.org/licenses/MIT)
 Copyright (c) 2016 Ivan Zakharchenko

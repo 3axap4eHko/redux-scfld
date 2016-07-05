@@ -1,6 +1,6 @@
 'use strict';
 
-import config from './config';
+import {loadedConfig as config} from './config';
 import {relative, eachEntity, mapEntity} from './utils';
 
 export default {

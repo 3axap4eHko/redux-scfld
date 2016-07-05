@@ -7,39 +7,92 @@ import generateTypes from '../dist/types';
 import {createReducer, generateReducersIndex} from '../dist/reducer';
 import {createState, generateStatesIndex} from '../dist/state';
 import {getEntity, getEntities, eachEntity} from '../dist/utils';
+import {defaultConfig} from '../dist/config';
 
 var [command, ...args] = process.argv.slice(2);
 
-const [,name] = ((args[0] || '').match(/(\w+)/) || []);
-const options = {
-    force: ~args.indexOf('-f') || ~args.indexOf('--force')
+const argFlagExpr = /^\-\-(\w+)$/;
+const argFlagShortExpr = /^\-(\w+)$/;
+const argFlagValueExpr = /^\-\-(\w+)=(.+)$/;
+const argFlagNamesExpr = /^(\w+)$/;
+
+const optionsMap = {
+    f: 'force',
+    t: 'templates'
 };
+
+function parseArgFlag(options, arg) {
+    const matches = arg.match(argFlagExpr);
+    if (matches) {
+        options[matches[1]] = true;
+        return true;
+    }
+}
+
+function parseArgShortFlag(options, arg) {
+    const matches = arg.match(argFlagShortExpr);
+    if (matches) {
+        Array.from(matches[1]).map( o => optionsMap[o]).forEach( name => {
+            options[name] = true;
+        });
+        return true;
+    }
+}
+
+function parseArgValueFlag(options, arg) {
+    const matches = arg.match(argFlagValueExpr);
+    if (matches) {
+        options[matches[1]] = matches[2];
+        return true;
+    }
+}
+
+function parseArgIdxFlag(options, arg, idx) {
+    const matches = arg.match(argFlagNamesExpr);
+    if (matches) {
+        options[idx] = matches[1];
+        return true;
+    }
+}
+
+const parsers = [parseArgFlag, parseArgShortFlag, parseArgValueFlag, parseArgIdxFlag];
+const options = args.reduce( (options, arg, idx) => {
+    if (!parsers.some( parser => parser(options, arg, idx) )) {
+        throw new Error(`Unexpected argument: '${arg}'`);
+    }
+    return options;
+}, {});
 
 const commands = {
     help() {
         console.log('React Redux Scaffold');
         console.log('redux [command] [options]');
         console.log('commands:');
-        console.log('config                         init config');
-        console.log('create [actionName] [options]  creates action, reducer and type');
-        console.log('update                         updates index files of actions, reducers and types');
-        console.log('ls                             list of entities');
-        console.log('ns                             list of namespaces');
-        console.log('types                          list types');
+        console.log('config [-t]                        init config (use -t arg to add template sections )');
+        console.log('create [actionName] [-f|--force]   creates action, reducer and type');
+        console.log('update                             updates index files of actions, reducers and types');
+        console.log('ls                                 list of entities');
+        console.log('ns                                 list of namespaces');
+        console.log('types                              list types');
         console.log('\t options:');
         console.log('-f, --force  force action');
     },
     config() {
-        const baseConfig = {
-            actionsPath: './app/actions',
-            reducersPath: './app/reducers',
-            typesPath: './app/types',
-            statesPath: './app/states'
-        };
-        Fs.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '    '))
+        var baseConfig;
+        if (options.templates) {
+            Object.assign(baseConfig, defaultConfig);
+        } else {
+            baseConfig = {
+                actionsPath: './app/actions',
+                reducersPath: './app/reducers',
+                typesPath: './app/types',
+                statesPath: './app/states'
+            }
+        }
+        Fs.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '  '))
     },
-    create(name, options) {
-        const entity = getEntity(name);
+    create(options) {
+        const entity = getEntity(options[0]);
         const entities = getEntities(entity);
         createAction(entity, options);
         generateActionsIndex(entities);
@@ -81,4 +134,4 @@ const commands = {
 if (!commands[command]) {
     command = 'help';
 }
-commands[command](name, options);
+commands[command](options);

@@ -2,8 +2,6 @@
 
 'use strict';
 
-var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
-
 var _fs = require('fs');
 
 var _fs2 = _interopRequireDefault(_fs);
@@ -20,6 +18,8 @@ var _state = require('../dist/state');
 
 var _utils = require('../dist/utils');
 
+var _config = require('../dist/config');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _toArray(arr) { return Array.isArray(arr) ? arr : Array.from(arr); }
@@ -32,41 +32,92 @@ var command = _process$argv$slice2[0];
 
 var args = _process$argv$slice2.slice(1);
 
-var _ref = (args[0] || '').match(/(\w+)/) || [];
+var argFlagExpr = /^\-\-(\w+)$/;
+var argFlagShortExpr = /^\-(\w+)$/;
+var argFlagValueExpr = /^\-\-(\w+)=(.+)$/;
+var argFlagNamesExpr = /^(\w+)$/;
 
-var _ref2 = _slicedToArray(_ref, 2);
-
-var name = _ref2[1];
-
-var options = {
-    force: ~args.indexOf('-f') || ~args.indexOf('--force')
+var optionsMap = {
+    f: 'force',
+    t: 'templates'
 };
+
+function parseArgFlag(options, arg) {
+    var matches = arg.match(argFlagExpr);
+    if (matches) {
+        options[matches[1]] = true;
+        return true;
+    }
+}
+
+function parseArgShortFlag(options, arg) {
+    var matches = arg.match(argFlagShortExpr);
+    if (matches) {
+        Array.from(matches[1]).map(function (o) {
+            return optionsMap[o];
+        }).forEach(function (name) {
+            options[name] = true;
+        });
+        return true;
+    }
+}
+
+function parseArgValueFlag(options, arg) {
+    var matches = arg.match(argFlagValueExpr);
+    if (matches) {
+        options[matches[1]] = matches[2];
+        return true;
+    }
+}
+
+function parseArgIdxFlag(options, arg, idx) {
+    var matches = arg.match(argFlagNamesExpr);
+    if (matches) {
+        options[idx] = matches[1];
+        return true;
+    }
+}
+
+var parsers = [parseArgFlag, parseArgShortFlag, parseArgValueFlag, parseArgIdxFlag];
+var options = args.reduce(function (options, arg, idx) {
+    if (!parsers.some(function (parser) {
+        return parser(options, arg, idx);
+    })) {
+        throw new Error('Unexpected argument: \'' + arg + '\'');
+    }
+    return options;
+}, {});
 
 var commands = {
     help: function help() {
         console.log('React Redux Scaffold');
         console.log('redux [command] [options]');
         console.log('commands:');
-        console.log('config                         init config');
-        console.log('create [actionName] [options]  creates action, reducer and type');
-        console.log('update                         updates index files of actions, reducers and types');
-        console.log('ls                             list of entities');
-        console.log('ns                             list of namespaces');
-        console.log('types                          list types');
+        console.log('config [-t]                        init config (use -t arg to add template sections )');
+        console.log('create [actionName] [-f|--force]   creates action, reducer and type');
+        console.log('update                             updates index files of actions, reducers and types');
+        console.log('ls                                 list of entities');
+        console.log('ns                                 list of namespaces');
+        console.log('types                              list types');
         console.log('\t options:');
         console.log('-f, --force  force action');
     },
     config: function config() {
-        var baseConfig = {
-            actionsPath: './app/actions',
-            reducersPath: './app/reducers',
-            typesPath: './app/types',
-            statesPath: './app/states'
-        };
-        _fs2.default.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '    '));
+        var baseConfig;
+        if (options.templates) {
+            Object.assign(baseConfig, _config.defaultConfig);
+        } else {
+            baseConfig = {
+                actionsPath: './app/actions',
+                reducersPath: './app/reducers',
+                typesPath: './app/types',
+                statesPath: './app/states'
+            };
+        }
+        _fs2.default.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '  '));
     },
-    create: function create(name, options) {
-        var entity = (0, _utils.getEntity)(name);
+    create: function create(options) {
+        var entity = (0, _utils.getEntity)(options[0]);
         var entities = (0, _utils.getEntities)(entity);
         (0, _action.createAction)(entity, options);
         (0, _action.generateActionsIndex)(entities);
@@ -114,4 +165,4 @@ var commands = {
 if (!commands[command]) {
     command = 'help';
 }
-commands[command](name, options);
+commands[command](options);

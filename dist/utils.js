@@ -8,6 +8,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 exports.mkDir = mkDir;
 exports.relative = relative;
+exports.join = join;
 exports.getType = getType;
 exports.getFilename = getFilename;
 exports.getName = getName;
@@ -31,8 +32,6 @@ var _glob2 = _interopRequireDefault(_glob);
 var _lodash = require('lodash');
 
 var _config = require('./config');
-
-var _config2 = _interopRequireDefault(_config);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -60,6 +59,10 @@ function mkDir(path) {
 
 function relative(from, to) {
     return _path2.default.relative(from, to).replace(slashReplaceExpr, '/');
+}
+
+function join() {
+    return _path2.default.join.apply(_path2.default, arguments).replace(slashReplaceExpr, '/');
 }
 
 function getType(actionName) {
@@ -99,18 +102,18 @@ function getEntity(name) {
         TYPE: getType(name),
         filename: filename,
         path: _path2.default.join(namespace, filename).replace(slashReplaceExpr, '/'),
-        actionFolder: _path2.default.join(_config2.default.actionsPath, namespace).replace(slashReplaceExpr, '/'),
-        actionPath: _path2.default.join(_config2.default.actionsPath, namespace, filename).replace(slashReplaceExpr, '/'),
-        reducerFolder: _path2.default.join(_config2.default.reducersPath, namespace).replace(slashReplaceExpr, '/'),
-        reducerPath: _path2.default.join(_config2.default.reducersPath, namespace, filename).replace(slashReplaceExpr, '/'),
-        statePath: _path2.default.join(_config2.default.statesPath, namespace).replace(slashReplaceExpr, '/') + '.js'
+        actionFolder: _path2.default.join(_config.loadedConfig.actionsPath, namespace).replace(slashReplaceExpr, '/'),
+        actionPath: _path2.default.join(_config.loadedConfig.actionsPath, namespace, filename).replace(slashReplaceExpr, '/'),
+        reducerFolder: _path2.default.join(_config.loadedConfig.reducersPath, namespace).replace(slashReplaceExpr, '/'),
+        reducerPath: _path2.default.join(_config.loadedConfig.reducersPath, namespace, filename).replace(slashReplaceExpr, '/'),
+        statePath: _path2.default.join(_config.loadedConfig.statesPath, namespace).replace(slashReplaceExpr, '/') + '.js'
     };
 }
 
 function getEntities(addEntity) {
-    return _glob2.default.sync(_path2.default.join(_config2.default.actionsPath, '*', '*.js'), { root: _config2.default.actionsPath }).reduce(function (entities, filename) {
+    return _glob2.default.sync(_path2.default.join(_config.loadedConfig.actionsPath, '*', '*.js'), { root: _config.loadedConfig.actionsPath }).reduce(function (entities, filename) {
         var name = getName(filename);
-        var entity = getEntity(name, _config2.default);
+        var entity = getEntity(name, _config.loadedConfig);
         if (!entities[entity.namespace]) {
             entities[entity.namespace] = {};
         }

@@ -3,7 +3,7 @@
 import Fs from 'fs';
 import Path from 'path';
 import {template} from 'lodash';
-import config from './config';
+import {loadedConfig as config} from './config';
 import {mkDir} from './utils';
 import templateOptions  from './template-options';
 

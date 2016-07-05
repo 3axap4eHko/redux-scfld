@@ -4,7 +4,7 @@ import Fs from 'fs';
 import Path from 'path';
 import Glob from 'glob';
 import {camelCase, upperFirst, lowerFirst}  from 'lodash';
-import config from './config';
+import {loadedConfig as config} from './config';
 
 const slashReplaceExpr = /\\/g;
 const pathSplitterExpr = /\/|\\/g;
@@ -26,6 +26,10 @@ export function mkDir(path) {
 
 export function relative(from, to) {
     return Path.relative(from, to).replace(slashReplaceExpr,'/');
+}
+
+export function join(...paths) {
+    return Path.join(...paths).replace(slashReplaceExpr,'/');
 }
 
 export function getType(actionName) {
