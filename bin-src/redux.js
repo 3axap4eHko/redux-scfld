@@ -78,16 +78,14 @@ const commands = {
         console.log('-f, --force  force action');
     },
     config() {
-        var baseConfig;
+        var baseConfig = {
+            actionsPath: './app/actions',
+            reducersPath: './app/reducers',
+            typesPath: './app/types',
+            statesPath: './app/states'
+        };
         if (options.templates) {
-            Object.assign(baseConfig, defaultConfig);
-        } else {
-            baseConfig = {
-                actionsPath: './app/actions',
-                reducersPath: './app/reducers',
-                typesPath: './app/types',
-                statesPath: './app/states'
-            }
+            baseConfig = Object.assign({}, defaultConfig, baseConfig);
         }
         Fs.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '  '))
     },

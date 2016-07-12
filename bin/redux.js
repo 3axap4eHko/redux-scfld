@@ -103,16 +103,14 @@ var commands = {
         console.log('-f, --force  force action');
     },
     config: function config() {
-        var baseConfig;
+        var baseConfig = {
+            actionsPath: './app/actions',
+            reducersPath: './app/reducers',
+            typesPath: './app/types',
+            statesPath: './app/states'
+        };
         if (options.templates) {
-            Object.assign(baseConfig, _config.defaultConfig);
-        } else {
-            baseConfig = {
-                actionsPath: './app/actions',
-                reducersPath: './app/reducers',
-                typesPath: './app/types',
-                statesPath: './app/states'
-            };
+            baseConfig = Object.assign({}, _config.defaultConfig, baseConfig);
         }
         _fs2.default.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '  '));
     },

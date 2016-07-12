@@ -15,7 +15,7 @@ Redux Scaffold Generator
 ### Convention
 
 Redux Scaffold Entity name format `{namespace}{ActionName}` where
-`{namespace}` should be a **lowercased** noun and {ActionName} should be **PascalCased** starts with verb.
+`{namespace}` should be a **lowercased** noun and `{ActionName}` should be **PascalCased** starts with verb.
 For example: `postsFetchPage`, `postsFetchFilter`, `postCreate` etc.
 
 ### Configuration
