@@ -2,8 +2,10 @@
 'use strict';
 <%
     const importReducers    = mapEntity(entities, entity => `import ${entity.fullName} from './${entity.path}';` ).join('\n');
+    const statePath = relative(config.reducersPath, config.statesPath);
 %>
 {importReducers}
+import defaultState from './{statePath}';
 
 const namespaceReducersMap = {
 <%
@@ -17,9 +19,9 @@ const namespaceReducersMap = {
     __global : {}
 };
 
-export default function(state = {}, action) {
+export default function(state = defaultState, action) {
     const {namespace, type} = action;
-    if ( state && namespace in namespaceReducersMap ) {
+    if ( namespace in namespaceReducersMap ) {
         const prevNamespaceState = state[namespace];
         if ( type in namespaceReducersMap[namespace] ) {
             const nextNamespaceState = namespaceReducersMap[namespace][type](prevNamespaceState, action);
