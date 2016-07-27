@@ -49,7 +49,7 @@ function _createAction(namespace, type, action) {
     return (...args) => {
         return (dispatch, getState) => {
             dispatch(_createProcess(namespace, type, ...args));
-            return Promise.resolve(action(getState, ...args))
+            return new Promise( resolve => resolve(action(getState, ...args)) )
                 .then(result => dispatch(_createSuccess(namespace, type, result)))
                 .catch(error => dispatch(_createFailure(namespace, type, error, args)));
         }
