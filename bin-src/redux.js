@@ -14,7 +14,7 @@ var [command, ...args] = process.argv.slice(2);
 const argFlagExpr = /^\-\-(\w+)$/;
 const argFlagShortExpr = /^\-(\w+)$/;
 const argFlagValueExpr = /^\-\-(\w+)=(.+)$/;
-const argFlagNamesExpr = /^(\w+)$/;
+const argFlagNamesExpr = /^([\w:_]+)$/;
 
 const optionsMap = {
     f: 'force',
@@ -68,7 +68,7 @@ const commands = {
         console.log('React Redux Scaffold');
         console.log('redux [command] [options]');
         console.log('commands:');
-        console.log('config [-t]                        init config (use -t arg to add template sections )');
+        console.log('config [-t]                        init config (use -t arg to add templates sections )');
         console.log('create [actionName] [-f|--force]   creates action, reducer and type');
         console.log('update                             updates index files of actions, reducers and types');
         console.log('ls                                 list of entities');
@@ -79,6 +79,7 @@ const commands = {
     },
     config() {
         var baseConfig = {
+            useCamelCasedPaths: false,
             actionsPath: './app/actions',
             reducersPath: './app/reducers',
             typesPath: './app/types',

@@ -11,6 +11,7 @@ exports.relative = relative;
 exports.join = join;
 exports.getType = getType;
 exports.getFilename = getFilename;
+exports.getFolderName = getFolderName;
 exports.getName = getName;
 exports.getEntity = getEntity;
 exports.getEntities = getEntities;
@@ -40,8 +41,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 var slashReplaceExpr = /\\/g;
 var pathSplitterExpr = /\/|\\/g;
 var pathExtractExpr = /(?![A-Z])(\w)([A-Z])/g;
-var namespaceExtractExpr = /^(\w+?)([A-Z].*)/;
-var nameExtractExpr = /\/(\w+\/[\w\-]+?)(\.js)?$/;
+var nameExtractExpr = /\/([\w\-]+)\/([\w\-]+)(\.js)?$/;
 
 function createIfNotExists(path) {
     if (!_fs2.default.existsSync(path)) {
@@ -70,43 +70,58 @@ function getType(actionName) {
 }
 
 function getFilename(baseName) {
+    if (_config.loadedConfig.useCamelCasedPaths) {
+        return (0, _lodash.camelCase)(baseName) + '.js';
+    }
     return baseName.replace(pathExtractExpr, '$1-$2').toLowerCase() + '.js';
+}
+
+function getFolderName(namespace) {
+    if (_config.loadedConfig.useCamelCasedPaths) {
+        return (0, _lodash.camelCase)(namespace);
+    }
+    return '' + namespace.replace(pathExtractExpr, '$1-$2').toLowerCase();
 }
 
 function getName(path) {
     var _path$replace$match = path.replace(slashReplaceExpr, '/').match(nameExtractExpr);
 
-    var _path$replace$match2 = _slicedToArray(_path$replace$match, 2);
+    var _path$replace$match2 = _slicedToArray(_path$replace$match, 3);
 
-    var name = _path$replace$match2[1];
+    var namespace = _path$replace$match2[1];
+    var name = _path$replace$match2[2];
 
-    return (0, _lodash.camelCase)(name);
+    return (0, _lodash.camelCase)(namespace) + ':' + (0, _lodash.camelCase)(name);
 }
 
-function getEntity(name) {
-    var _name$match = name.match(namespaceExtractExpr);
+// test:failure
+function getEntity(code) {
+    var _code$split = code.split(':');
 
-    var _name$match2 = _slicedToArray(_name$match, 3);
+    var _code$split2 = _slicedToArray(_code$split, 2);
 
-    var namespace = _name$match2[1];
-    var baseName = _name$match2[2];
+    var namespace = _code$split2[0];
+    var name = _code$split2[1];
 
-    var filename = getFilename(baseName);
+    var fullName = (0, _lodash.camelCase)(code);
+    var foldername = getFolderName(namespace);
+    var filename = getFilename(name);
     return {
         namespace: namespace,
         NAMESPACE: namespace.toUpperCase(),
-        fullName: name,
-        FullName: (0, _lodash.upperFirst)(name),
-        name: (0, _lodash.lowerFirst)(baseName),
-        Name: baseName,
-        TYPE: getType(name),
+        fullName: fullName,
+        FullName: (0, _lodash.upperFirst)(fullName),
+        name: (0, _lodash.lowerFirst)(name),
+        Name: name,
+        TYPE: getType(fullName),
+        foldername: foldername,
         filename: filename,
-        path: _path2.default.join(namespace, filename).replace(slashReplaceExpr, '/'),
-        actionFolder: _path2.default.join(_config.loadedConfig.actionsPath, namespace).replace(slashReplaceExpr, '/'),
-        actionPath: _path2.default.join(_config.loadedConfig.actionsPath, namespace, filename).replace(slashReplaceExpr, '/'),
-        reducerFolder: _path2.default.join(_config.loadedConfig.reducersPath, namespace).replace(slashReplaceExpr, '/'),
-        reducerPath: _path2.default.join(_config.loadedConfig.reducersPath, namespace, filename).replace(slashReplaceExpr, '/'),
-        statePath: _path2.default.join(_config.loadedConfig.statesPath, namespace).replace(slashReplaceExpr, '/') + '.js'
+        path: _path2.default.join(foldername, filename).replace(slashReplaceExpr, '/'),
+        actionFolder: _path2.default.join(_config.loadedConfig.actionsPath, foldername).replace(slashReplaceExpr, '/'),
+        actionPath: _path2.default.join(_config.loadedConfig.actionsPath, foldername, filename).replace(slashReplaceExpr, '/'),
+        reducerFolder: _path2.default.join(_config.loadedConfig.reducersPath, foldername).replace(slashReplaceExpr, '/'),
+        reducerPath: _path2.default.join(_config.loadedConfig.reducersPath, foldername, filename).replace(slashReplaceExpr, '/'),
+        statePath: _path2.default.join(_config.loadedConfig.statesPath, foldername).replace(slashReplaceExpr, '/') + '.js'
     };
 }
 

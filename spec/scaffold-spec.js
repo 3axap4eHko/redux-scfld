@@ -1,7 +1,7 @@
 'use strict';
 
 import createStore from './store';
-import {testSuccess, testFailure} from './app/actions';
+import {unitTestSuccessCase, unitTestFailureCase} from './app/actions';
 
 const defaultValue = 'defaultValue';
 
@@ -10,7 +10,7 @@ describe('Scaffold test suite:', () => {
     it('Test dispatch/listen action progress', done => {
         const store = createStore();
         const unsubscribe = store.subscribe(() => {
-            const state = store.getState().test;
+            const state = store.getState().unitTest;
             if ('process' in state) {
                 expect(state.defaultValue).toEqual(defaultValue, 'testing default value');
                 expect(state.process).toBeTruthy();
@@ -18,12 +18,12 @@ describe('Scaffold test suite:', () => {
                 done();
             }
         });
-        store.dispatch(testSuccess( () => {} ))
+        store.dispatch(unitTestSuccessCase( () => {} ))
     });
     it('Test dispatch/listen action result', done => {
         const store = createStore();
         const unsubscribe = store.subscribe(() => {
-            const state = store.getState().test;
+            const state = store.getState().unitTest;
             if ('result' in state) {
                 expect(state.defaultValue).toEqual(defaultValue, 'testing default value');
                 expect(state.result).toEqual('test', 'testing result value');
@@ -32,12 +32,12 @@ describe('Scaffold test suite:', () => {
                 done();
             }
         });
-        store.dispatch(testSuccess( () => 'test' ))
+        store.dispatch(unitTestSuccessCase( () => 'test' ))
     });
     it('Test dispatch/listen action failure', done => {
         const store = createStore();
         const unsubscribe = store.subscribe(() => {
-            const state = store.getState().test;
+            const state = store.getState().unitTest;
             if ('error' in state) {
                 expect(state.defaultValue).toEqual(defaultValue, 'testing default value');
                 expect(state.error instanceof Error).toBeTruthy();
@@ -46,6 +46,6 @@ describe('Scaffold test suite:', () => {
                 done();
             }
         });
-        store.dispatch(testFailure( () => {throw new Error()} ));
+        store.dispatch(unitTestFailureCase( () => {throw new Error()} ));
     });
 });

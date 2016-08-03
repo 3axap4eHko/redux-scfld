@@ -4,6 +4,7 @@ import Fs from 'fs';
 import {join} from './utils';
 
 export const defaultConfig = Object.freeze({
+    useCamelCasedPaths: false,
     actionsPath: './app/actions',
     actionTemplatePath: join(__dirname, 'templates', 'action.jst'),
     actionsIndexTemplatePath: join(__dirname, 'templates', 'action-index.jst'),

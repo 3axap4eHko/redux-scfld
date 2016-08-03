@@ -13,15 +13,20 @@ Redux Scaffold Generator
 ## Usage
 
 ### Convention
-
-Redux Scaffold Entity name format `{namespace}{ActionName}` where
-`{namespace}` should be a **lowercased** noun and `{ActionName}` should be **PascalCased** starts with verb.
-For example: `postsFetchPage`, `postsFetchFilter`, `postCreate` etc.
+Redux Scaffold works with `actions`, `reducers`, initial `states` and `types` through the concept of
+Redux Scaffold Entity (RSE). That's meaning for a every RSE exists single `action`, `reducer` and `type`.
+All RSE grouped by RSE Namespace and for every RSE group exists initial `state`. Redux Scaffold generate
+RSE from RSE Full Name of following format `{RSENamespace}:{RSEName}`. For example:
+`recently-posts:load-page` or `recentlyPosts:loadPage` has `recentlyPost` as RSE Namespace and `loadPage` as `RSE Name`.
+Through this approach will be generated `action`, `reducer`, `type` and initial `state`. Redux Scaffold action
+has parameter `status` which can be `STATUS_PROCESS`, `STATUS_SUCCESS` and `STATUS_FAILURE` instead of usual behavior
+of Redux.
 
 ### Configuration
 .reduxrc
 ``` json
 {
+  "useCamelCasedPaths": true,
   "actionsPath": "./app/actions",
   "actionTemplatePath": "./node_modules/redux-scfld/dist/templates/action.jst",
   "actionsIndexTemplatePath": "./node_modules/redux-scfld/dist/templates/action-index.jst",
@@ -38,7 +43,7 @@ For example: `postsFetchPage`, `postsFetchFilter`, `postCreate` etc.
 ### Action, Types and Reducer generation
 
 ``` bash
-$ redux create postsFetchPage
+$ redux create posts:fetchPage
 ```
 ```
 +---app
@@ -118,7 +123,7 @@ function _createAction(namespace, type, action) {
     return (...args) => {
         return (dispatch, getState) => {
             dispatch(_createProcess(namespace, type, ...args));
-            return Promise.resolve(action(getState, ...args))
+            return new Promise( resolve => resolve(action(getState, ...args)) )
                 .then(result => dispatch(_createSuccess(namespace, type, result)))
                 .catch(error => dispatch(_createFailure(namespace, type, error, args)));
         }
@@ -249,36 +254,33 @@ store.dispatch(postsFetchPage());
 }
 ```
 
-template files is lodash [_.template](https://lodash.com/docs#template) function with arguments entity or entities.
-
-Entity interface
-``` javascript
+Template files is lodash [_.template](https://lodash.com/docs#template) function with arguments entity or entities
+of the following structure:
+ ``` javascript
 Entity = {
-    namespace,
-    NAMESPACE,
-    fullName,
-    FullName,
-    name,
-    Name,
-    TYPE,
-    filename,
-    path,
-    actionFolder,
-    actionPath,
-    reducerFolder,
-    reducerPath,
-    statePath
-}
-```
+     namespace,
+     NAMESPACE,
+     fullName,
+     FullName,
+     name,
+     Name,
+     TYPE,
+     filename,
+     path,
+     actionFolder,
+     actionPath,
+     reducerFolder,
+     reducerPath,
+     statePath
+};
 
-Entities interface
-``` javascript
 Entities = {
-    [entity.namespace]: {
-        [entity.name]: entity
-    }
-}
-```
+     [entity.namespace]: {
+         [entity.name]: entity
+     }
+};
+ ```
+
 
 ### Commands
 `$ redux config` - generates default config file `.reduxrc`

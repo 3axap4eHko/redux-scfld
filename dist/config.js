@@ -14,6 +14,7 @@ var _utils = require('./utils');
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var defaultConfig = exports.defaultConfig = Object.freeze({
+    useCamelCasedPaths: false,
     actionsPath: './app/actions',
     actionTemplatePath: (0, _utils.join)(__dirname, 'templates', 'action.jst'),
     actionsIndexTemplatePath: (0, _utils.join)(__dirname, 'templates', 'action-index.jst'),

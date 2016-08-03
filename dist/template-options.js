@@ -17,6 +17,7 @@ exports.default = {
         eachEntity: _utils.eachEntity,
         mapEntity: _utils.mapEntity,
         relative: _utils.relative,
+        getFolderName: _utils.getFolderName,
         i: function i(str) {
             return '${' + str + '}';
         }
