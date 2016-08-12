@@ -73,8 +73,7 @@ export function getEntity(code) {
         path: Path.join( foldername, filename ).replace( slashReplaceExpr, '/' ),
         actionFolder: Path.join( config.actionsPath, foldername ).replace( slashReplaceExpr, '/' ),
         actionPath: Path.join( config.actionsPath, foldername, filename ).replace( slashReplaceExpr, '/' ),
-        reducerFolder: Path.join( config.reducersPath, foldername ).replace( slashReplaceExpr, '/' ),
-        reducerPath: Path.join( config.reducersPath, foldername, filename ).replace( slashReplaceExpr, '/' ),
+        reducerPath: Path.join( config.reducersPath, foldername ).replace( slashReplaceExpr, '/' ) + '.js',
         statePath: Path.join( config.statesPath, foldername ).replace( slashReplaceExpr, '/' ) + '.js'
     };
 }

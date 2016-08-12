@@ -119,8 +119,7 @@ function getEntity(code) {
         path: _path2.default.join(foldername, filename).replace(slashReplaceExpr, '/'),
         actionFolder: _path2.default.join(_config.loadedConfig.actionsPath, foldername).replace(slashReplaceExpr, '/'),
         actionPath: _path2.default.join(_config.loadedConfig.actionsPath, foldername, filename).replace(slashReplaceExpr, '/'),
-        reducerFolder: _path2.default.join(_config.loadedConfig.reducersPath, foldername).replace(slashReplaceExpr, '/'),
-        reducerPath: _path2.default.join(_config.loadedConfig.reducersPath, foldername, filename).replace(slashReplaceExpr, '/'),
+        reducerPath: _path2.default.join(_config.loadedConfig.reducersPath, foldername).replace(slashReplaceExpr, '/') + '.js',
         statePath: _path2.default.join(_config.loadedConfig.statesPath, foldername).replace(slashReplaceExpr, '/') + '.js'
     };
 }

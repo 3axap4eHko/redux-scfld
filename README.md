@@ -14,12 +14,12 @@ Redux Scaffold Generator
 
 ### Convention
 Redux Scaffold works with `actions`, `reducers`, initial `states` and `types` through the concept of
-Redux Scaffold Entity (RSE). That's meaning for a every RSE exists single `action`, `reducer` and `type`.
-All RSE grouped by RSE Namespace and for every RSE group exists initial `state`. Redux Scaffold generate
+Redux Scaffold Entity (RSE). That's meaning for a every RSE exists single `action` and `type`.
+All RSE grouped by RSE Namespace and for every RSE group exists initial `state` and `reducer`. Redux Scaffold generate
 RSE from RSE Full Name of following format `{RSENamespace}:{RSEName}`. For example:
 `recently-posts:load-page` or `recentlyPosts:loadPage` has `recentlyPost` as RSE Namespace and `loadPage` as `RSE Name`.
-Through this approach will be generated `action`, `reducer`, `type` and initial `state`. Redux Scaffold action
-has parameter `status` which can be `STATUS_PROCESS`, `STATUS_SUCCESS` and `STATUS_FAILURE` instead of usual behavior
+Through this approach will be generated `action`, `reducer`, `type` and initial `state`. Redux Scaffold action with parameter `type`
+has also parameter `status` which can be `STATUS_PROCESS`, `STATUS_SUCCESS` and `STATUS_FAILURE` in compare of usual behavior
 of Redux.
 
 ### Configuration
@@ -57,10 +57,10 @@ $ redux create posts:fetchPage
     |           fetch-page.js
     |           
     +---reducers
-    |   |   index.js
-    |   |   
-    |   \---posts
-    |           fetch-page.js
+    |       index.js
+    |       posts.js
+    |
+    |
     |           
     +---state
     |       index.js
@@ -154,22 +154,20 @@ export const NAMESPACES = [
 export const POSTS_FETCH_PAGE = 'POSTS_FETCH_PAGE';
 ```
 #### Reducer
-`app/reducers/posts/fetch-page.js` contains
+`app/reducers/posts.js` contains
 ``` javascript
 import {
     STATUS_PROCESS,
     STATUS_SUCCESS,
     STATUS_FAILURE,
-} from './../../types';
+} from './../types';
 
-import defaultState from './../../states/posts';
-
-export default function(state = defaultState, action) {
+export default function(state, action) {
     switch(action.status) {
         case STATUS_PROCESS:
             break;
         case STATUS_SUCCESS:
-            break;
+            return action.result;
         case STATUS_FAILURE:
             break;
     }
@@ -178,30 +176,25 @@ export default function(state = defaultState, action) {
 ```
 `app/reducers/index.js` contains
 ``` javascript
-import postsFetchPage from './posts/fetch-page.js';
+import posts from './posts.js';
+import defaultState from './../states';
 
 const namespaceReducersMap = {
 
-    posts: {
-        POSTS_FETCH_PAGE: postsFetchPage,
-    },
+    posts
 
 };
 
-export default function(state = {}, action) {
-    const {namespace, type} = action;
-    if ( state && namespace in namespaceReducersMap ) {
+export default function(state = defaultState, action) {
+     const { namespace } = action;
+    if ( namespace in namespaceReducersMap ) {
         const prevNamespaceState = state[namespace];
-        if ( type in namespaceReducersMap[namespace] ) {
-            const nextNamespaceState = namespaceReducersMap[namespace][type](prevNamespaceState, action);
-            if (typeof nextNamespaceState === 'undefined') {
-                throw new Error(`State from ${namespace}.${type} cannot be undefined`);
-            }
-            if (prevNamespaceState !== nextNamespaceState) {
-                return { ...state, [namespace]: nextNamespaceState };
-            }
-        } else {
-            throw new Error(`Entity ${namespace}.${type} not defined`);
+        const nextNamespaceState = namespaceReducersMap[namespace](prevNamespaceState, action);
+        if (typeof nextNamespaceState === 'undefined') {
+            throw new Error(`State from reducer '${namespace}' cannot be undefined`);
+        }
+        if (prevNamespaceState !== nextNamespaceState) {
+            return { ...state, [namespace]: nextNamespaceState };
         }
     }
     return state;
@@ -269,7 +262,6 @@ Entity = {
      path,
      actionFolder,
      actionPath,
-     reducerFolder,
      reducerPath,
      statePath
 };

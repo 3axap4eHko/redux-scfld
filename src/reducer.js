@@ -11,12 +11,11 @@ const reducerTemplate = template(Fs.readFileSync(config.reducerTemplatePath), te
 const indexTemplate = template(Fs.readFileSync(config.reducersIndexTemplatePath), templateOptions);
 
 export function createReducer(entity, options) {
-    mkDir(entity.reducerFolder);
-    if (Fs.existsSync(entity.reducerPath) && !options.force) {
-        throw new Error(`Reducer '${entity.fullName}' already exists`)
+    mkDir(config.reducersPath);
+    if (!Fs.existsSync(entity.reducerPath) || options.force) {
+        const content = reducerTemplate({entity});
+        Fs.writeFileSync(entity.reducerPath, content);
     }
-    const content = reducerTemplate({entity});
-    Fs.writeFileSync(entity.reducerPath, content);
 }
 export function generateReducersIndex(entities) {
     mkDir(config.reducersPath);

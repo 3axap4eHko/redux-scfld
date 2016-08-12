@@ -1,8 +1,7 @@
 {__info_header}
 'use strict';
 <%
-    const typesPath = relative(entity.reducerFolder, config.typesPath);
-    const statePath = relative(entity.reducerFolder, entity.statePath);
+    const typesPath = relative(config.reducersPath, config.typesPath);
 %>
 
 import {
@@ -16,8 +15,9 @@ export default function(state, action) {
         case STATUS_PROCESS:
             break;
         case STATUS_SUCCESS:
-            break;
+            return action.result;
         case STATUS_FAILURE:
+            console.error(action.error);
             break;
     }
     return state;

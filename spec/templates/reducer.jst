@@ -1,8 +1,7 @@
 {__info_header}
 'use strict';
 <%
-    const typesPath = relative(entity.reducerFolder, config.typesPath);
-    const statePath = relative(entity.reducerFolder, entity.statePath);
+    const typesPath = relative(config.reducersPath, config.typesPath);
 %>
 
 import {

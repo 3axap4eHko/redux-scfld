@@ -30,12 +30,11 @@ var reducerTemplate = (0, _lodash.template)(_fs2.default.readFileSync(_config.lo
 var indexTemplate = (0, _lodash.template)(_fs2.default.readFileSync(_config.loadedConfig.reducersIndexTemplatePath), _templateOptions2.default);
 
 function createReducer(entity, options) {
-    (0, _utils.mkDir)(entity.reducerFolder);
-    if (_fs2.default.existsSync(entity.reducerPath) && !options.force) {
-        throw new Error('Reducer \'' + entity.fullName + '\' already exists');
+    (0, _utils.mkDir)(_config.loadedConfig.reducersPath);
+    if (!_fs2.default.existsSync(entity.reducerPath) || options.force) {
+        var content = reducerTemplate({ entity: entity });
+        _fs2.default.writeFileSync(entity.reducerPath, content);
     }
-    var content = reducerTemplate({ entity: entity });
-    _fs2.default.writeFileSync(entity.reducerPath, content);
 }
 function generateReducersIndex(entities) {
     (0, _utils.mkDir)(_config.loadedConfig.reducersPath);
