@@ -1,8 +1,5 @@
-'use strict';
-
 import { loadedConfig as config } from './config';
 import { relative, eachEntity, mapEntity, getFolderName } from './utils';
-
 
 export default {
   interpolate: /{([^\s]+)}/g,

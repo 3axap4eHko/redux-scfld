@@ -1,2 +1,2 @@
 @echo off
-node dist/redux %*
+node build/redux.js %*

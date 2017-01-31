@@ -1,5 +1,3 @@
-'use strict';
-
 import createStore from './store';
 import {unitTestSuccessCase, unitTestFailureCase} from './app/actions';
 

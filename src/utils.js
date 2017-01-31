@@ -1,5 +1,3 @@
-'use strict';
-
 import Fs from 'fs';
 import Path from 'path';
 import Glob from 'glob';
