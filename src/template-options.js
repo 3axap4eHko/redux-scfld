@@ -15,7 +15,7 @@ export default {
       return `\${${str}}`;
     },
     noExt(filename) {
-      return filename.replace(/\.\w+$/,'');
-    }
-  }
+      return filename.replace(/\.\w+$/, '');
+    },
+  },
 };

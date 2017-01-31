@@ -17,10 +17,8 @@ gulp.task('copy', ['clean'], function () {
 });
 
 gulp.task('js-compile', ['clean'], function () {
-  return gulp.src(['./src/**/*.js', '!./src/redux.js'])
-    .pipe(eslint({
-      fix: true
-    }))
+  return gulp.src(['./src/**/!(redux)*.js'])
+    .pipe(eslint())
     .pipe(eslint.format())
     .pipe(babel())
     .pipe(gulp.dest(buildDir));

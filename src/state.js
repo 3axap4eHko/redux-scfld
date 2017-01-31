@@ -4,7 +4,7 @@ import { template } from 'lodash';
 
 import { loadedConfig as config } from './config';
 import { mkDir } from './utils';
-import templateOptions  from './template-options';
+import templateOptions from './template-options';
 
 const stateTemplate = template(Fs.readFileSync(config.stateTemplatePath), templateOptions);
 const indexTemplate = template(Fs.readFileSync(config.statesIndexTemplatePath), templateOptions);

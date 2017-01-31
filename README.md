@@ -275,19 +275,19 @@ Entities = {
 
 
 ### Commands
-`$ redux config` - generates default config file `.reduxrc`
+`$ redux init` - Generate Redux-Scfld config file `.reduxrc`
 
-`$ redux create` - creates Action, Type and Reducer and generates their indexes
+`$ redux create <entities>` - Creates entities with Action, Type and Reducer and generates their indexes
 
-`$ redux update` - regenerate indexes of Actions, Types and Reducers (does not affect already generated not indexes files)
+`$ redux gen` - Regenerate indexes of Actions, Types and Reducers (does not affect already generated not indexes files)
 
-`$ redux ls` - displays list of entities
+`$ redux list` - List of entities
 
-`$ redux ns` - displays list of namespaces
+`$ redux namespace` - List of namespaces
 
-`$ redux types` - displays list of types
+`$ redux types` - List of types
 
-`$ redux help` - display help page
+`$ redux --help` - Display help information
 
 ### Demo project
 

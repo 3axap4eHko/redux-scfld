@@ -1,5 +1,5 @@
 import Fs from 'fs';
-import { join } from './utils';
+import { join, exists, configFile } from './utils';
 
 export const defaultConfig = Object.freeze({
   useCamelCasedPaths: false,
@@ -16,4 +16,4 @@ export const defaultConfig = Object.freeze({
   statesIndexTemplatePath: join(__dirname, 'templates', 'state-index.jst'),
 });
 
-export const loadedConfig = Object.freeze(Object.assign({}, defaultConfig, Fs.existsSync('./.reduxrc') ? JSON.parse(Fs.readFileSync('./.reduxrc', 'utf8')) : {}));
+export const loadedConfig = Object.freeze(Object.assign({}, defaultConfig, exists(configFile) ? JSON.parse(Fs.readFileSync(configFile, 'utf8')) : {}));

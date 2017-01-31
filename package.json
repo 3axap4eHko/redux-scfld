@@ -1,15 +1,12 @@
 {
   "name": "redux-scfld",
-  "version": "0.5.5",
-  "bin": {
-    "redux": "./redux.js"
-  },
+  "version": "0.5.7",
+  "bin": "./redux.js",
   "description": "Redux Scaffold",
   "scripts": {
-    "redux": "node build/redux.js",
     "build": "cross-env NODE_ENV=production gulp",
-    "test": "cross-env NODE_ENV=development gulp && yarn redux create unitTest:successCase unitTest:failureCase && yarn redux create another:action && jasmine && eslint --fix spec/app/**",
-    "patch-release": "npm run test && eslint spec/app/** && npm version patch && git push && git push --tags && npm publish"
+    "test": "cross-env NODE_ENV=development gulp && node build/redux.js create unitTest:successCase unitTest:failureCase && node build/redux.js create another:action && jasmine && eslint --fix spec/app/**",
+    "patch-release": "npm run test && npm version patch && git push && git push --tags && npm publish"
   },
   "keywords": [
     "redux",

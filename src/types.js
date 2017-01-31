@@ -3,12 +3,12 @@ import Path from 'path';
 import { template } from 'lodash';
 import { loadedConfig as config } from './config';
 import { mkDir } from './utils';
-import templateOptions  from './template-options';
+import templateOptions from './template-options';
 
 const typesTemplate = template(Fs.readFileSync(config.typesTemplatePath), templateOptions);
 
-module.exports = function types(entities) {
+export default function types(entities) {
   mkDir(config.typesPath);
   const content = typesTemplate({ entities });
   Fs.writeFileSync(Path.join(config.typesPath, 'index.js'), content);
-};
+}

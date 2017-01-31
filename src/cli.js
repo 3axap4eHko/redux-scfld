@@ -1,46 +1,46 @@
 import Fs from 'fs';
-import {resolve} from 'path';
+import { join } from 'path';
 import commander from 'commander';
-import {createAction, generateActionsIndex} from './action';
+import { createAction, generateActionsIndex } from './action';
 import generateTypes from './types';
-import {createReducer, generateReducersIndex} from './reducer';
-import {createState, generateStatesIndex} from './state';
-import {getEntity, getEntities, eachEntity} from './utils';
-import {defaultConfig} from './config';
+import { createReducer, generateReducersIndex } from './reducer';
+import { createState, generateStatesIndex } from './state';
+import { getEntity, getEntities, eachEntity } from './utils';
+import { defaultConfig, loadedConfig } from './config';
 
-const {version} = JSON.parse(Fs.readFileSync(resolve(__dirname, './package.json'), 'utf8'));
+const { version } = JSON.parse(Fs.readFileSync(join(__dirname, '../package.json'), 'utf8'));
 
 commander
   .version(version)
   .usage('[options] <command>');
 
 commander
-  .command('config')
-  .alias('cfg')
+  .command('init')
+  .alias('i')
   .description('Generate Redux-Scfld config file .reduxrc')
   .option('-t, --templates', 'add templates section to the config file')
-  .action(({templates}) => {
+  .action(({ templates }) => {
     const baseConfig = {
       useCamelCasedPaths: false,
       actionsPath: './app/actions',
       reducersPath: './app/reducers',
       typesPath: './app/types',
-      statesPath: './app/states'
+      statesPath: './app/states',
     };
     if (templates) {
-      Fs.writeFileSync('.reduxrc', JSON.stringify({...defaultConfig, ...baseConfig}, null, '  '))
+      Fs.writeFileSync('.reduxrc', JSON.stringify({ ...defaultConfig, ...baseConfig }, null, '  '));
     } else {
-      Fs.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '  '))
+      Fs.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '  '));
     }
   });
 
 commander
   .command('create <entity> [entities...]')
   .alias('c')
-  .description('Create new entity (namespace:entity)')
+  .description('Creates entities with Action, Type and Reducer and generates their indexes')
   .option('-f, --force', 'Force creation entity')
   .action((name, names, options) => {
-    [name].concat(names).forEach( entityName => {
+    [name].concat(names).forEach((entityName) => {
       const entity = getEntity(entityName);
       const entities = getEntities(entity);
       createAction(entity, options);
@@ -55,6 +55,14 @@ commander
       generateStatesIndex(entities);
       console.log(`[Redux] State created: ${entity.namespace}`);
     });
+  });
+
+commander
+  .command('config')
+  .alias('cfg')
+  .description('Display current config')
+  .action(() => {
+    console.log(JSON.stringify(loadedConfig, null, '  '));
   });
 
 commander
@@ -101,11 +109,12 @@ commander
   });
 
 
-commander.on('--help', function(){
+commander.on('--help', () => {
   console.log('  Examples:');
   console.log('');
-  console.log('    $ custom-help --help');
-  console.log('    $ custom-help -h');
+  console.log('    $ redux init --templates');
+  console.log('    $ redux create app:load app:save app:reset');
+  console.log('    $ redux ls');
   console.log('');
 });
 
