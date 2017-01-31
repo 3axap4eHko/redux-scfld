@@ -9,7 +9,7 @@ import { createState, generateStatesIndex } from './state';
 import { getEntity, getEntities, eachEntity, mkDir } from './utils';
 import { defaultConfig, loadedConfig } from './config';
 
-const { version } = JSON.parse(Fs.readFileSync(join(__dirname, '../package.json'), 'utf8'));
+const { version } = JSON.parse(Fs.readFileSync(join(__dirname, './package.json'), 'utf8'));
 
 commander
   .version(version)

@@ -1,6 +1,6 @@
 {
   "name": "redux-scfld",
-  "version": "0.5.9",
+  "version": "0.5.11",
   "bin": {
     "redux": "./redux.js"
   },
