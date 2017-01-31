@@ -1,98 +1,47 @@
 import Fs from 'fs';
-import { createAction, generateActionsIndex } from './action';
+import {resolve} from 'path';
+import commander from 'commander';
+import {createAction, generateActionsIndex} from './action';
 import generateTypes from './types';
-import { createReducer, generateReducersIndex } from './reducer';
-import { createState, generateStatesIndex } from './state';
-import { getEntity, getEntities, eachEntity } from './utils';
-import { defaultConfig } from './config';
+import {createReducer, generateReducersIndex} from './reducer';
+import {createState, generateStatesIndex} from './state';
+import {getEntity, getEntities, eachEntity} from './utils';
+import {defaultConfig} from './config';
 
-const [command, ...args] = process.argv.slice(2);
 
-const argFlagExpr = /^--(\w+)$/;
-const argFlagShortExpr = /^-(\w+)$/;
-const argFlagValueExpr = /^--(\w+)=(.+)$/;
-const argFlagNamesExpr = /^([\w:_]+)$/;
+const {version} = JSON.parse(Fs.readFileSync(resolve(__dirname, '../package.json'), 'utf8'));
 
-const optionsMap = {
-  f: 'force',
-  t: 'templates',
-};
+commander
+  .version(version)
+  .usage('[options] <command>');
 
-function parseArgFlag(options, arg) {
-  const matches = arg.match(argFlagExpr);
-  if (matches) {
-    options[matches[1]] = true;
-    return true;
-  }
-  return false;
-}
-
-function parseArgShortFlag(options, arg) {
-  const matches = arg.match(argFlagShortExpr);
-  if (matches) {
-    Array.from(matches[1]).map(o => optionsMap[o]).forEach(name => {
-      options[name] = true;
-    });
-    return true;
-  }
-  return false;
-}
-
-function parseArgValueFlag(options, arg) {
-  const matches = arg.match(argFlagValueExpr);
-  if (matches) {
-    options[matches[1]] = matches[2];
-    return true;
-  }
-  return false;
-}
-
-function parseArgIdxFlag(options, arg, idx) {
-  const matches = arg.match(argFlagNamesExpr);
-  if (matches) {
-    options[idx] = matches[1];
-    return true;
-  }
-  return false;
-}
-
-const parsers = [parseArgFlag, parseArgShortFlag, parseArgValueFlag, parseArgIdxFlag];
-const options = args.reduce((options, arg, idx) => {
-  if (!parsers.some(parser => parser(options, arg, idx))) {
-    throw new Error(`Unexpected argument: '${arg}'`);
-  }
-  return options;
-}, {});
-
-const commands = {
-  help() {
-    console.log('React Redux Scaffold');
-    console.log('redux [command] [options]');
-    console.log('commands:');
-    console.log('config [-t]                        init config (use -t arg to add templates sections )');
-    console.log('create [actionName] [-f|--force]   creates action, reducer and type');
-    console.log('update                             updates index files of actions, reducers and types');
-    console.log('ls                                 list of entities');
-    console.log('ns                                 list of namespaces');
-    console.log('types                              list types');
-    console.log('\t options:');
-    console.log('-f, --force  force action');
-  },
-  config() {
-    var baseConfig = {
+commander
+  .command('config')
+  .alias('cfg')
+  .description('Generate Redux-Scfld config file .reduxrc')
+  .option('-t, --templates', 'add templates section to the config file')
+  .action(({templates}) => {
+    const baseConfig = {
       useCamelCasedPaths: false,
       actionsPath: './app/actions',
       reducersPath: './app/reducers',
       typesPath: './app/types',
       statesPath: './app/states'
     };
-    if (options.templates) {
-      baseConfig = Object.assign({}, defaultConfig, baseConfig);
+    if (templates) {
+      Fs.writeFileSync('.reduxrc', JSON.stringify({...defaultConfig, ...baseConfig}, null, '  '))
+    } else {
+      Fs.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '  '))
     }
-    Fs.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '  '))
-  },
-  create(options) {
-    const entity = getEntity(options[0]);
+  });
+
+commander
+  .command('create <entity name>')
+  .alias('c')
+  .description('Create new entity (namespace:entity)')
+  .option('-f, --force', 'Force creation entity')
+  .action((entityName, options) => {
+    const entity = getEntity(entityName);
     const entities = getEntities(entity);
     createAction(entity, options);
     generateActionsIndex(entities);
@@ -105,8 +54,13 @@ const commands = {
     createState(entity, options);
     generateStatesIndex(entities);
     console.log(`[Redux] State created: ${entity.namespace}`);
-  },
-  update() {
+  });
+
+commander
+  .command('gen')
+  .alias('g')
+  .description('Generate indexes for actions, reducers, states and types')
+  .action(() => {
     const entities = getEntities();
     generateActionsIndex(entities);
     console.log('[Redux] Actions index generated');
@@ -116,23 +70,47 @@ const commands = {
     console.log('[Redux] Reducers index generated');
     generateStatesIndex(entities);
     console.log('[Redux] States index generated');
-  },
-  ls() {
+  });
+
+commander
+  .command('list')
+  .alias('ls')
+  .description('List all entities')
+  .action(() => {
     const entities = getEntities();
     eachEntity(entities, entity => console.log(`${entity.fullName}`));
-  },
-  ns() {
+  });
+
+commander
+  .command('namespaces')
+  .alias('ns')
+  .description('List all namespaces')
+  .action(() => {
     const entities = getEntities();
     Object.keys(entities).forEach(namespace => console.log(`${namespace}`));
-  },
-  types() {
+  });
+
+commander
+  .command('types')
+  .alias('t')
+  .description('List all types')
+  .action(() => {
     const entities = getEntities();
     eachEntity(entities, entity => console.log(`${entity.TYPE}`));
-  }
-};
+  });
 
-if (!commands[command]) {
-  commands.help(options);
-} else {
-  commands[command](options);
+
+commander.on('--help', function(){
+  console.log('  Examples:');
+  console.log('');
+  console.log('    $ custom-help --help');
+  console.log('    $ custom-help -h');
+  console.log('');
+});
+
+commander.parse(process.argv);
+
+
+if (!process.argv.slice(2).length) {
+  commander.outputHelp();
 }

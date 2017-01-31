@@ -11,6 +11,6 @@
   },
   "rules": {
     "no-debugger": 2,
-    "linebreak-style": 0
+    "no-console": 0
   }
 }

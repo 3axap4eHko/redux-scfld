@@ -7,7 +7,7 @@ import { loadedConfig as config } from './config';
 const slashReplaceExpr = /\\/g;
 const pathSplitterExpr = /\/|\\/g;
 const pathExtractExpr = /(?![A-Z])(\w)([A-Z])/g;
-const nameExtractExpr = /\/([\w\-]+)\/([\w\-]+)(\.js)?$/;
+const nameExtractExpr = /\/([\w-]+)\/([\w-]+)(\.js)?$/;
 const extensionExp = /\.\w+$/;
 
 function createIfNotExists(path) {
@@ -19,7 +19,7 @@ function createIfNotExists(path) {
 
 export function mkDir(path) {
   if (Fs.existsSync(path)) return path;
-  return path.split(pathSplitterExpr).reduce((path, part) => createIfNotExists(Path.join(path, part)), '');
+  return path.split(pathSplitterExpr).reduce((result, part) => createIfNotExists(Path.join(result, part)), '');
 }
 
 export function relative(from, to) {
@@ -82,11 +82,9 @@ export function getEntities(addEntity) {
   return Glob.sync(Path.join(config.actionsPath, '*', '*.js'), { root: config.actionsPath }).reduce((entities, filename) => {
     const name = getName(filename);
     const entity = getEntity(name, config);
-    if (!entities[entity.namespace]) {
-      entities[entity.namespace] = {};
-    }
-    entities[entity.namespace][entity.name] = entity;
-    return entities;
+    const {[entity.namespace]: entityNamespace = {}} = entities;
+    entityNamespace[entity.name] = entity;
+    return {...entities, entityNamespace};
   }, addEntity ? { [addEntity.namespace]: { [addEntity.name]: addEntity } } : {});
 }
 
@@ -99,9 +97,10 @@ export function eachEntity(entities, callback) {
 }
 
 export function mapEntity(entities, callback) {
-  return Object.keys(entities).reduce((result, namespace) => {
-    return result.concat(Object.keys(entities[namespace]).map(name => {
-      return callback(entities[namespace][name], name, namespace, entities);
-    }))
-  }, []);
+  return Object.keys(entities)
+    .reduce((result, namespace) => result
+        .concat(Object.keys(entities[namespace])
+          .map(name => callback(entities[namespace][name], name, namespace, entities))
+        )
+    , []);
 }

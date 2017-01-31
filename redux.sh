@@ -1,2 +1,3 @@
 #!/bin/sh
-node build/redux.js $*
+
+node ./build/cli.js $*

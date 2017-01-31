@@ -1,2 +1,3 @@
 @echo off
-node build/redux.js %*
+
+node ./build/cli.js %*

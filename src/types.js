@@ -7,7 +7,7 @@ import templateOptions  from './template-options';
 
 const typesTemplate = template(Fs.readFileSync(config.typesTemplatePath), templateOptions);
 
-module.exports = function (entities) {
+module.exports = function types(entities) {
   mkDir(config.typesPath);
   const content = typesTemplate({ entities });
   Fs.writeFileSync(Path.join(config.typesPath, 'index.js'), content);

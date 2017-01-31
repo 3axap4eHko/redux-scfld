@@ -4,10 +4,16 @@
       "targets": {
         "node": true
       }
-    }],
-    "babili"
+    }]
   ],
   "plugins": [
     "transform-object-rest-spread"
-  ]
+  ],
+  "env": {
+    "production": {
+      "presets": [
+        "babili"
+      ]
+    }
+  }
 }
