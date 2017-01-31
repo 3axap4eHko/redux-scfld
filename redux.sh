@@ -1,2 +1,2 @@
 #!/bin/sh
-node bin/redux.js $*
+node dist/redux $*

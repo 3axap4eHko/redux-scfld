@@ -1,6 +1,11 @@
 {
   "presets": [
-    "es2015"
+    ["env",{
+      "targets": {
+        "node": true
+      }
+    }],
+    "babili"
   ],
   "plugins": [
     "transform-object-rest-spread"

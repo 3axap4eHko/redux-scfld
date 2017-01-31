@@ -1,12 +1,13 @@
 {
   "name": "redux-scfld",
-  "version": "0.3.2",
+  "version": "0.5.0",
   "bin": {
-    "redux": "./bin/redux.js"
+    "redux": "./redux"
   },
   "description": "Redux Scaffold",
   "scripts": {
-    "test": "gulp && redux create unitTest:successCase && redux create unitTest:failureCase && jasmine",
+    "build": "gulp",
+    "test": "gulp && redux create unitTest:successCase && redux create unitTest:failureCase && redux create another:action && jasmine && eslint spec/app/**",
     "patch-release": "npm run test && eslint spec/app/** && npm version patch && git push && git push --tags && npm publish"
   },
   "keywords": [
@@ -26,13 +27,20 @@
     "lodash": "^4.14.1"
   },
   "devDependencies": {
-    "babel-eslint": "^6.1.2",
+    "babel-eslint": "7.1.1",
     "babel-plugin-transform-object-rest-spread": "^6.8.0",
-    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-babili": "^0.0.10",
+    "babel-preset-env": "^1.1.8",
+    "babel-preset-latest": "^6.22.0",
     "del": "^2.2.1",
+    "eslint": "^3.14.1",
+    "eslint-config-airbnb": "^14.0.0",
+    "eslint-plugin-import": "2.2.0",
+    "eslint-plugin-jsx-a11y": "3.0.2",
+    "eslint-plugin-react": "6.9.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^6.1.2",
-    "gulp-eslint": "^2.1.0",
+    "gulp-eslint": "3.0.1",
     "jasmine": "^2.4.1",
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0"

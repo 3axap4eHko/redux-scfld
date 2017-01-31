@@ -5,29 +5,21 @@ const del = require('del');
 const babel = require('gulp-babel');
 const eslint = require('gulp-eslint');
 
+const buildDir = './build';
+
 gulp.task('clean', cb => {
-    return del(['./dist/**/*', './bin/redux.js', './spec/app/'], cb);
+    return del(['./spec/app/', buildDir], cb);
 });
 
 gulp.task('copy', ['clean'], function() {
-    return gulp.src(['./src/**/*', '!./src/*.js'])
-        .pipe(gulp.dest('./dist'));
+    return gulp.src(['./src/**/*', './package.json', './README.md', 'LICENSE', './src/redux', '!./src/*.js'])
+        .pipe(gulp.dest(buildDir));
 });
 
 gulp.task('js-compile', ['clean'], function() {
-    return gulp.src(['./src/**/*.js'])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(babel({ presets: ['es2015'] }))
-        .pipe(gulp.dest('./dist'));
+    return gulp.src(['./src/**/*.js','!./src/redux.js'])
+        .pipe(babel())
+        .pipe(gulp.dest(buildDir));
 });
 
-gulp.task('js-compile-bin', ['clean'], function() {
-    return gulp.src(['./bin-src/redux.js'])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(babel({ presets: ['es2015'] }))
-        .pipe(gulp.dest('./bin'));
-});
-
-gulp.task('default', ['clean', 'js-compile', 'copy', 'js-compile-bin']);
+gulp.task('default', ['clean', 'js-compile', 'copy']);

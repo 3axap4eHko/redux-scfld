@@ -1,34 +1,33 @@
 {__info_header}
-'use strict';
 <%
     const typesPath = relative(config.reducersPath, config.typesPath);
 %>
-
 import {
-    STATUS_PROCESS,
-    STATUS_SUCCESS,
-    STATUS_FAILURE
+  STATUS_PROCESS,
+  STATUS_SUCCESS,
+  STATUS_FAILURE,
 } from './{typesPath}';
 
-export default function(state, action) {
-    switch(action.status) {
-        case STATUS_PROCESS:
-            return {
-                ...state,
-                process: true
-            };
-        case STATUS_SUCCESS:
-            return {
-                ...state,
-                process: false,
-                result: action.result
-            };
-        case STATUS_FAILURE:
-            return {
-                ...state,
-                process: false,
-                error: action.error
-            };
-    }
-    return state;
+export default function (state, action) {
+  switch (action.status) {
+    case STATUS_PROCESS:
+      return {
+        ...state,
+        process: true,
+      };
+    case STATUS_SUCCESS:
+      return {
+        ...state,
+        process: false,
+        result: action.result,
+      };
+    case STATUS_FAILURE:
+      return {
+        ...state,
+        process: false,
+        error: action.error,
+      };
+    default:
+      return state;
+  }
 }
