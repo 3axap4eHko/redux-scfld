@@ -12,7 +12,7 @@ gulp.task('clean', cb => {
 });
 
 gulp.task('copy', ['clean'], function() {
-    return gulp.src(['./src/**/*', './package.json', './README.md', 'LICENSE', './src/redux', '!./src/*.js'])
+    return gulp.src(['./src/**/*', './package.json', './README.md', 'LICENSE', '!./src/!(redux)*.js'])
         .pipe(gulp.dest(buildDir));
 });
 

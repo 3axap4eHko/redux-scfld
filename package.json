@@ -2,7 +2,7 @@
   "name": "redux-scfld",
   "version": "0.5.0",
   "bin": {
-    "redux": "./redux"
+    "redux": "./redux.js"
   },
   "description": "Redux Scaffold",
   "scripts": {
