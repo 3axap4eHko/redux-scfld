@@ -279,6 +279,8 @@ Entities = {
 
 `$ redux create <entities>` - Creates entities with Action, Type and Reducer and generates their indexes
 
+`$ redux config` - Display current config
+
 `$ redux gen` - Regenerate indexes of Actions, Types and Reducers (does not affect already generated not indexes files)
 
 `$ redux list` - List of entities
@@ -286,6 +288,8 @@ Entities = {
 `$ redux namespace` - List of namespaces
 
 `$ redux types` - List of types
+
+`$ redux template <dir>` - Generate templates to specified directory
 
 `$ redux --help` - Display help information
 

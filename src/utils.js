@@ -10,22 +10,6 @@ const pathExtractExpr = /(?![A-Z])(\w)([A-Z])/g;
 const nameExtractExpr = /\/([\w-]+)\/([\w-]+)(\.js)?$/;
 const extensionExp = /\.\w+$/;
 
-function createIfNotExists(path) {
-  if (!Fs.existsSync(path)) {
-    Fs.mkdirSync(path);
-  }
-  return path;
-}
-
-export function mkDir(path) {
-  if (Fs.existsSync(path)) return path;
-  return path.split(pathSplitterExpr).reduce((result, part) => createIfNotExists(Path.join(result, part)), '');
-}
-
-export function relative(from, to) {
-  return Path.relative(from, to).replace(slashReplaceExpr, '/');
-}
-
 export function exists(filename) {
   try {
     Fs.accessSync(filename, Fs.constants.R_OK);
@@ -33,6 +17,25 @@ export function exists(filename) {
   } catch (e) {
     return false;
   }
+}
+
+function createIfNotExists(path) {
+  if (!exists(path)) {
+    Fs.mkdirSync(path);
+  }
+  return path;
+}
+
+export function mkDir(path) {
+  if (exists(path)) return path;
+  return path
+    .split(pathSplitterExpr)
+    .filter(part => part.length)
+    .reduce((result, part) => createIfNotExists(Path.join(result, part)), '');
+}
+
+export function relative(from, to) {
+  return Path.relative(from, to).replace(slashReplaceExpr, '/');
 }
 
 export function join(...paths) {

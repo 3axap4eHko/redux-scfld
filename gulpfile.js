@@ -8,7 +8,7 @@ const eslint = require('gulp-eslint');
 const buildDir = './build';
 
 gulp.task('clean', cb => {
-  return del(['./spec/app/', buildDir], cb);
+  return del(['./spec/app/', buildDir, './tmp'], cb);
 });
 
 gulp.task('copy', ['clean'], function () {

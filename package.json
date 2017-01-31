@@ -1,7 +1,9 @@
 {
   "name": "redux-scfld",
-  "version": "0.5.7",
-  "bin": "./redux.js",
+  "version": "0.5.9",
+  "bin": {
+    "redux": "./redux.js"
+  },
   "description": "Redux Scaffold",
   "scripts": {
     "build": "cross-env NODE_ENV=production gulp",

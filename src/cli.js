@@ -1,11 +1,12 @@
 import Fs from 'fs';
-import { join } from 'path';
+import { resolve, join, basename, relative } from 'path';
+import Glob from 'glob';
 import commander from 'commander';
 import { createAction, generateActionsIndex } from './action';
 import generateTypes from './types';
 import { createReducer, generateReducersIndex } from './reducer';
 import { createState, generateStatesIndex } from './state';
-import { getEntity, getEntities, eachEntity } from './utils';
+import { getEntity, getEntities, eachEntity, mkDir } from './utils';
 import { defaultConfig, loadedConfig } from './config';
 
 const { version } = JSON.parse(Fs.readFileSync(join(__dirname, '../package.json'), 'utf8'));
@@ -106,6 +107,20 @@ commander
   .action(() => {
     const entities = getEntities();
     eachEntity(entities, entity => console.log(`${entity.TYPE}`));
+  });
+
+commander
+  .command('templates <dir>')
+  .alias('tpl')
+  .description('Generate templates in target directory')
+  .action((dir) => {
+    const targetDir = relative(process.cwd(), resolve(process.cwd(), dir));
+    mkDir(targetDir);
+    Glob.sync(join(__dirname, 'templates/*.jst')).forEach((filepath) => {
+      const filename = join(targetDir, basename(filepath));
+      Fs.createReadStream(filepath)
+        .pipe(Fs.createWriteStream(filename));
+    });
   });
 
 
