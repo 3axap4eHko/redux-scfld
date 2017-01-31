@@ -35,24 +35,26 @@ commander
   });
 
 commander
-  .command('create <entity name>')
+  .command('create <entity> [entities...]')
   .alias('c')
   .description('Create new entity (namespace:entity)')
   .option('-f, --force', 'Force creation entity')
-  .action((entityName, options) => {
-    const entity = getEntity(entityName);
-    const entities = getEntities(entity);
-    createAction(entity, options);
-    generateActionsIndex(entities);
-    console.log(`[Redux] Action created: ${entity.fullName}`);
-    generateTypes(entities, options);
-    console.log(`[Redux] Type created: ${entity.TYPE}`);
-    createReducer(entity, options);
-    generateReducersIndex(entities);
-    console.log(`[Redux] Reducer created: ${entity.fullName}`);
-    createState(entity, options);
-    generateStatesIndex(entities);
-    console.log(`[Redux] State created: ${entity.namespace}`);
+  .action((name, names, options) => {
+    [name].concat(names).forEach( entityName => {
+      const entity = getEntity(entityName);
+      const entities = getEntities(entity);
+      createAction(entity, options);
+      generateActionsIndex(entities);
+      console.log(`[Redux] Action created: ${entity.fullName}`);
+      generateTypes(entities, options);
+      console.log(`[Redux] Type created: ${entity.TYPE}`);
+      createReducer(entity, options);
+      generateReducersIndex(entities);
+      console.log(`[Redux] Reducer created: ${entity.fullName}`);
+      createState(entity, options);
+      generateStatesIndex(entities);
+      console.log(`[Redux] State created: ${entity.namespace}`);
+    });
   });
 
 commander

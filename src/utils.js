@@ -84,7 +84,7 @@ export function getEntities(addEntity) {
     const entity = getEntity(name, config);
     const {[entity.namespace]: entityNamespace = {}} = entities;
     entityNamespace[entity.name] = entity;
-    return {...entities, entityNamespace};
+    return {...entities, [entity.namespace]: entityNamespace};
   }, addEntity ? { [addEntity.namespace]: { [addEntity.name]: addEntity } } : {});
 }
 

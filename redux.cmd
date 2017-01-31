@@ -1,3 +1,3 @@
 @echo off
 
-node ./build/cli.js %*
+yarn redux %*
