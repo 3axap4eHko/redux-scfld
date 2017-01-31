@@ -8,8 +8,7 @@ import {createState, generateStatesIndex} from './state';
 import {getEntity, getEntities, eachEntity} from './utils';
 import {defaultConfig} from './config';
 
-
-const {version} = JSON.parse(Fs.readFileSync(resolve(__dirname, '../package.json'), 'utf8'));
+const {version} = JSON.parse(Fs.readFileSync(resolve(__dirname, './package.json'), 'utf8'));
 
 commander
   .version(version)
