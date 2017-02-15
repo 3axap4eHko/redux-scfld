@@ -27,7 +27,6 @@ export function init(templates) {
 export function add(entityNames, options) {
   entityNames.forEach((entityName) => {
     const entity = getEntity(entityName);
-    console.log(entity);
     createAction(entity, options);
     console.log(`[Redux] Action created: ${entity.fullName}`);
     createReducer(entity, options);
