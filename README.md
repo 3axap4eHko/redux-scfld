@@ -43,7 +43,7 @@ of Redux.
 ### Action, Types and Reducer generation
 
 ``` bash
-$ redux create posts:fetchPage
+$ redux add posts:fetchPage
 ```
 ```
 +---app
@@ -277,7 +277,9 @@ Entities = {
 ### Commands
 `$ redux init` - Generate Redux-Scfld config file `.reduxrc`
 
-`$ redux create <entities>` - Creates entities with Action, Type and Reducer and generates their indexes
+`$ redux add <entities>` - Adds entities with Action, Type and Reducer and generates their indexes
+
+`$ redux del <entities>` - Deletes entities with Action, Type and Reducer or all namespaces and generates their indexes
 
 `$ redux config` - Display current config
 

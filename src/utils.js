@@ -71,9 +71,13 @@ export function getName(path) {
   return `${camelCase(namespace)}:${camelCase(name)}`;
 }
 
+export function parseName(entityName) {
+  return entityName.split(':');
+}
+
 // test:failure
 export function getEntity(code) {
-  const [namespace, name] = code.split(':');
+  const [namespace, name] = parseName(code);
   const fullName = camelCase(code);
   const foldername = getFolderName(namespace);
   const filename = getFilename(name);
@@ -120,5 +124,5 @@ export function mapEntity(entities, callback) {
         .concat(Object.keys(entities[namespace])
           .map(name => callback(entities[namespace][name], name, namespace, entities)),
         ),
-    []);
+      []);
 }

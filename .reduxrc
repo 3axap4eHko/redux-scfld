@@ -1,10 +1,10 @@
 {
   "useCamelCasedPaths": false,
-  "actionsPath": "./spec/app/actions",
-  "actionTemplatePath": "./spec/templates/action.jst",
-  "reducersPath": "./spec/app/reducers",
-  "reducerTemplatePath": "./spec/templates/reducer.jst",
-  "typesPath": "./spec/app/types",
-  "statesPath": "./spec/app/states",
-  "stateTemplatePath": "./spec/templates/state.jst"
+  "actionsPath": "./test/app/actions",
+  "actionTemplatePath": "./test/templates/action.jst",
+  "reducersPath": "./test/app/reducers",
+  "reducerTemplatePath": "./test/templates/reducer.jst",
+  "typesPath": "./test/app/types",
+  "statesPath": "./test/app/states",
+  "stateTemplatePath": "./test/templates/state.jst"
 }

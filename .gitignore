@@ -5,4 +5,4 @@ build
 tmp
 node_modules
 npm-debug.log
-spec/app/
+test/app/
