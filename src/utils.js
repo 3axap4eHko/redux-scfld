@@ -27,7 +27,9 @@ function createIfNotExists(path) {
 }
 
 export function mkDir(path) {
-  if (exists(path)) return path;
+  if (exists(path)) {
+    return path;
+  }
   return path
     .split(pathSplitterExpr)
     .filter(part => part.length)
@@ -72,7 +74,7 @@ export function getName(path) {
 }
 
 export function parseName(entityName) {
-  return entityName.split(':');
+  return entityName.split(':').slice(0, 2);
 }
 
 // test:failure
@@ -121,8 +123,8 @@ export function eachEntity(entities, callback) {
 export function mapEntity(entities, callback) {
   return Object.keys(entities)
     .reduce((result, namespace) => result
-        .concat(Object.keys(entities[namespace])
-          .map(name => callback(entities[namespace][name], name, namespace, entities)),
-        ),
-      []);
+      .concat(Object.keys(entities[namespace])
+        .map(name => callback(entities[namespace][name], name, namespace, entities)),
+      ),
+    []);
 }
