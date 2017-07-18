@@ -9,7 +9,7 @@
     "build": "cross-env NODE_ENV=production gulp",
     "test": "cross-env NODE_ENV=development mocha -r should --compilers js:babel-core/register -R spec -u bdd test/*-spec.js",
     "lint": "eslint src/",
-    "patch-release": "npm run test && npm version patch && git push && git push --tags && npm publish"
+    "patch-release": "npm run test && npm version patch && git push && git push --tags && npm run build && cd build && npm publish"
   },
   "keywords": [
     "redux",
