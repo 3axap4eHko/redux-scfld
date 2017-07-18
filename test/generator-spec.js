@@ -11,6 +11,7 @@ function run(command) {
   try {
     return execSync(`node ${babel} src/${command}`);
   } catch (e) {
+    console.log(e);
     return e;
   }
 }
@@ -24,10 +25,11 @@ describe('Generator test suite:', function() {
 
   beforeEach(() => {
     try {
-      delete require.cache[require.resolve('./app/types')];
-      delete require.cache[require.resolve('./app/actions')];
-      delete require.cache[require.resolve('./app/reducers')];
-      delete require.cache[require.resolve('./app/states')];
+      Object.keys(require.cache).forEach(name => {
+        if (/app\/(types|actions|reducers|states)/.test(name)) {
+          delete require.cache[name];
+        }
+      });
     } catch (e) {
     }
   });
