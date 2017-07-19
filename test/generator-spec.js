@@ -1,5 +1,4 @@
 import Del from 'del';
-import { join } from 'path';
 import { execSync } from 'child_process';
 import runtime from 'module-runtime';
 

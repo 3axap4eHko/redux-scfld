@@ -1,19 +1,29 @@
 import Fs from 'fs';
 import { join, exists, configFile } from './utils';
 
-export const defaultConfig = Object.freeze({
-  useCamelCasedPaths: false,
-  actionsPath: './app/actions',
-  actionTemplatePath: join(__dirname, 'templates', 'action.jst'),
-  actionsIndexTemplatePath: join(__dirname, 'templates', 'action-index.jst'),
-  reducersPath: './app/reducers',
-  reducerTemplatePath: join(__dirname, 'templates', 'reducer.jst'),
-  reducersIndexTemplatePath: join(__dirname, 'templates', 'reducer-index.jst'),
-  typesPath: './app/types',
-  typesTemplatePath: join(__dirname, 'templates', 'types.jst'),
-  statesPath: './app/states',
-  stateTemplatePath: join(__dirname, 'templates', 'state.jst'),
-  statesIndexTemplatePath: join(__dirname, 'templates', 'state-index.jst'),
-});
+export function getBaseConfig(folder) {
+  return {
+    useCamelCasedPaths: false,
+    actionsPath: join(folder, 'actions'),
+    reducersPath: join(folder, 'reducers'),
+    typesPath: join(folder, 'types'),
+    statesPath: join(folder, 'states'),
+  };
+}
+
+export function getAdvancedConfig(folder) {
+  return {
+    ...getBaseConfig(folder),
+    actionTemplatePath: join(folder, 'templates', 'action.jst'),
+    actionsIndexTemplatePath: join(folder, 'templates', 'action-index.jst'),
+    reducerTemplatePath: join(folder, 'templates', 'reducer.jst'),
+    reducersIndexTemplatePath: join(folder, 'templates', 'reducer-index.jst'),
+    typesTemplatePath: join(folder, 'templates', 'types.jst'),
+    stateTemplatePath: join(folder, 'templates', 'state.jst'),
+    statesIndexTemplatePath: join(folder, 'templates', 'state-index.jst'),
+  };
+}
+
+export const defaultConfig = Object.freeze(getAdvancedConfig(__dirname));
 
 export const loadedConfig = Object.freeze(Object.assign({}, defaultConfig, exists(configFile) ? JSON.parse(Fs.readFileSync(configFile, 'utf8')) : {}));

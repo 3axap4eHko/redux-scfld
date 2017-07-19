@@ -5,10 +5,8 @@ import { loadedConfig as config } from './config';
 import { mkDir } from './utils';
 import templateOptions from './template-options';
 
-const reducerTemplate = template(Fs.readFileSync(config.reducerTemplatePath), templateOptions);
-const indexTemplate = template(Fs.readFileSync(config.reducersIndexTemplatePath), templateOptions);
-
 export function createReducer(entity, options) {
+  const reducerTemplate = template(Fs.readFileSync(config.reducerTemplatePath), templateOptions);
   mkDir(config.reducersPath);
   if (!Fs.existsSync(entity.reducerPath) || options.force) {
     const content = reducerTemplate({ entity });
@@ -16,6 +14,8 @@ export function createReducer(entity, options) {
   }
 }
 export function generateReducersIndex(entities) {
+  const indexTemplate = template(
+    Fs.readFileSync(config.reducersIndexTemplatePath), templateOptions);
   mkDir(config.reducersPath);
   const content = indexTemplate({ entities });
   Fs.writeFileSync(Path.join(config.reducersPath, 'index.js'), content);

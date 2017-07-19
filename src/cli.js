@@ -10,8 +10,8 @@ commander
   .command('init')
   .alias('i')
   .description('Generate Redux-Scfld config file .reduxrc')
-  .option('-t, --templates', 'add templates section to the config file')
-  .action(({ templates }) => Api.init(templates));
+  .option('-p, --path <path>', 'use custom path to generate templates')
+  .action(({ path }) => Api.init(path));
 
 commander
   .command('add <entity> [entities...]')
@@ -79,7 +79,6 @@ commander.on('--help', () => {
 });
 
 commander.parse(process.argv);
-
 
 if (!process.argv.slice(2).length) {
   commander.outputHelp();

@@ -1,5 +1,5 @@
 import Fs from 'fs';
-import { resolve, join, basename, relative } from 'path';
+import { join, basename, relative } from 'path';
 import Glob from 'glob';
 import Del from 'del';
 import { createAction, generateActionsIndex } from './action';
@@ -7,22 +7,7 @@ import generateTypes from './types';
 import { createReducer, generateReducersIndex } from './reducer';
 import { createState, generateStatesIndex } from './state';
 import { parseName, getEntity, getEntities, eachEntity, mkDir } from './utils';
-import { defaultConfig, loadedConfig } from './config';
-
-export function init(templates) {
-  const baseConfig = {
-    useCamelCasedPaths: false,
-    actionsPath: './app/actions',
-    reducersPath: './app/reducers',
-    typesPath: './app/types',
-    statesPath: './app/states',
-  };
-  if (templates) {
-    Fs.writeFileSync('.reduxrc', JSON.stringify({ ...defaultConfig, ...baseConfig }, null, '  '));
-  } else {
-    Fs.writeFileSync('.reduxrc', JSON.stringify(baseConfig, null, '  '));
-  }
-}
+import { loadedConfig, getBaseConfig, getAdvancedConfig } from './config';
 
 export function add(entityNames, options) {
   entityNames.forEach((entityName) => {
@@ -100,11 +85,21 @@ export function types() {
 }
 
 export function template(dir) {
-  const targetDir = relative(process.cwd(), resolve(process.cwd(), dir));
-  mkDir(targetDir);
+  mkDir(dir);
   Glob.sync(join(__dirname, 'templates/*.jst')).forEach((filepath) => {
-    const filename = join(targetDir, basename(filepath));
+    const filename = join(dir, basename(filepath));
     Fs.createReadStream(filepath)
       .pipe(Fs.createWriteStream(filename));
   });
 }
+
+export function init(path) {
+  if (path) {
+    const dir = `./${relative(process.cwd(), path)}`;
+    Fs.writeFileSync('.reduxrc', JSON.stringify(getAdvancedConfig(dir), null, '  '));
+    template(join(dir, 'templates'));
+  } else {
+    Fs.writeFileSync('.reduxrc', JSON.stringify(getBaseConfig('./app/redux'), null, '  '));
+  }
+}
+
