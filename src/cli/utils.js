@@ -1,39 +1,70 @@
 import Fs from 'fs';
 import Path from 'path';
 import Glob from 'glob';
-import { camelCase, upperFirst, lowerFirst } from 'lodash';
+import Del from 'del';
+import mkDirP from 'mkdirp';
+import { promisify } from 'util';
+
 import { loadedConfig as config } from './config';
 
+const writeFileAsync = promisify(Fs.writeFile);
+const accessAsync = promisify(Fs.access);
+const mkDirPAsync = promisify(mkDirP);
+const globAsync = promisify(Glob);
+
 const slashReplaceExpr = /\\/g;
-const pathSplitterExpr = /\/|\\/g;
 const pathExtractExpr = /(?![A-Z])(\w)([A-Z])/g;
 const nameExtractExpr = /\/([\w-]+)\/([\w-]+)(\.js)?$/;
-const extensionExp = /\.\w+$/;
+const extensionExpr = /\.\w+$/;
+const splitExpr = /[_*.,:\s\-]+/;
 
-export function exists(filename) {
-  try {
-    Fs.accessSync(filename, Fs.constants.R_OK);
-    return true;
-  } catch (e) {
-    return false;
-  }
+export function lowerFirst(value) {
+  return value[0].toLowerCase() + value.slice(1);
 }
 
-function createIfNotExists(path) {
-  if (!exists(path)) {
-    Fs.mkdirSync(path);
-  }
-  return path;
+export function upperFirst(value) {
+  return value[0].toUpperCase() + value.slice(1);
 }
 
-export function mkDir(path) {
-  if (exists(path)) {
-    return path;
-  }
-  return path
-    .split(pathSplitterExpr)
-    .filter(part => part.length)
-    .reduce((result, part) => createIfNotExists(Path.join(result, part)), '');
+export function camelCase(value) {
+  return value.split(splitExpr).map(upperFirst).join('');
+}
+
+export async function copy(from, to) {
+  return new Promise(resolve => {
+    Fs.createReadStream(from)
+      .pipe(
+        Fs.createWriteStream(to)
+          .on('finish', () => resolve()),
+      );
+  });
+}
+
+export async function rm(filename, options) {
+  return Del(filename, options);
+}
+
+export async function globRelative(relativePath, pattern, options) {
+  return (await globAsync(pattern, options))
+    .map(file => relative(relativePath, file));
+}
+
+export async function glob(...args) {
+  return globAsync(...args);
+}
+
+export async function write(filename, content) {
+  return writeFileAsync(filename, content);
+}
+
+export async function exists(filename) {
+  return accessAsync(filename)
+    .then(() => true)
+    .catch(() => false);
+}
+
+export async function mkDir(path) {
+  return mkDirPAsync(path);
 }
 
 export function relative(from, to) {
@@ -94,7 +125,7 @@ export function getEntity(code) {
     foldername,
     filename,
     path: Path.join(foldername, filename).replace(slashReplaceExpr, '/'),
-    asModule: Path.join(foldername, filename).replace(slashReplaceExpr, '/').replace(extensionExp, ''),
+    asModule: Path.join(foldername, filename).replace(slashReplaceExpr, '/').replace(extensionExpr, ''),
     actionFolder: Path.join(config.actionsPath, foldername).replace(slashReplaceExpr, '/'),
     actionPath: Path.join(config.actionsPath, foldername, filename).replace(slashReplaceExpr, '/'),
     reducerPath: Path.join(config.reducersPath, `${foldername}.js`).replace(slashReplaceExpr, '/'),
@@ -102,8 +133,9 @@ export function getEntity(code) {
   };
 }
 
-export function getEntities(addEntity) {
-  return Glob.sync(Path.join(config.actionsPath, '*', '*.js'), { root: config.actionsPath }).reduce((entities, filename) => {
+export async function getEntities(addEntity) {
+  const files = await globAsync(Path.join(config.actionsPath, '*', '*.js'), { root: config.actionsPath });
+  return files.reduce((entities, filename) => {
     const name = getName(filename);
     const entity = getEntity(name, config);
     const { [entity.namespace]: entityNamespace = {} } = entities;
@@ -112,19 +144,27 @@ export function getEntities(addEntity) {
   }, addEntity ? { [addEntity.namespace]: { [addEntity.name]: addEntity } } : {});
 }
 
-export function eachEntity(entities, callback) {
+export function flatEntities(entities) {
+  const result = [];
   Object.keys(entities).forEach((namespace) => {
     Object.keys(entities[namespace]).forEach((name) => {
-      callback(entities[namespace][name], name, namespace, entities);
+      result.push(entities[namespace][name]);
     });
+  });
+  return result;
+}
+
+export function eachEntity(entities, callback) {
+  flatEntities(entities).forEach(entity => {
+    callback(entity, entity.name, entity.namespace, entities);
   });
 }
 
 export function mapEntity(entities, callback) {
-  return Object.keys(entities)
-    .reduce((result, namespace) => result
-      .concat(Object.keys(entities[namespace])
-        .map(name => callback(entities[namespace][name], name, namespace, entities)),
-      ),
-    []);
+  return flatEntities(entities)
+    .map(entity => callback(entity, entity.name, entity.namespace, entities));
+}
+
+export function reduceEntity(entities, callback, ...init) {
+  return flatEntities(entities).reduce((result, entity) => callback(result, entity, entity.name, entity.namespace, entities), ...init);
 }

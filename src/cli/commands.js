@@ -1,6 +1,6 @@
 import commander from 'commander';
 import * as Api from './api';
-import { version } from './package.json';
+import { version } from '../../package.json';
 
 commander
   .version(version)
@@ -33,10 +33,10 @@ commander
   .action(() => Api.config());
 
 commander
-  .command('gen')
-  .alias('g')
-  .description('Generate indexes for actions, reducers, states and types')
-  .action(() => Api.gen());
+  .command('sync')
+  .alias('s')
+  .description('Sync actions, reducers, states and types')
+  .action(() => Api.sync());
 
 commander
   .command('list')
@@ -59,8 +59,8 @@ commander
 commander
   .command('templates <dir>')
   .alias('tpl')
-  .description('Generate templates in target directory')
-  .action(dir => Api.template(dir));
+  .description('Generate templates into target directory')
+  .action(dir => Api.copyTemplatesTo(dir));
 
 commander
   .command('*')
@@ -71,7 +71,7 @@ commander
 commander.on('--help', () => {
   console.log('  Examples:');
   console.log('');
-  console.log('    $ redux init --templates');
+  console.log('    $ redux init -p app/redux');
   console.log('    $ redux add app:load app:save app:reset');
   console.log('    $ redux del app');
   console.log('    $ redux ls');

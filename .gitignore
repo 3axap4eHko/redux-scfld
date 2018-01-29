@@ -1,8 +1,7 @@
 .idea
 .vscode
 .tmp 
-build
+dist
 tmp
-node_modules
-npm-debug.log
-test/app/
+node_modules/
+*.log*

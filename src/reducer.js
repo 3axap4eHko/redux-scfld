@@ -1,22 +1,33 @@
-import Fs from 'fs';
-import Path from 'path';
-import { template } from 'lodash';
-import { loadedConfig as config } from './config';
-import { mkDir } from './utils';
-import templateOptions from './template-options';
+import {
+  STATUS_PROCESS,
+  STATUS_SUCCESS,
+  STATUS_FAILURE,
+} from './types';
 
-export function createReducer(entity, options) {
-  const reducerTemplate = template(Fs.readFileSync(config.reducerTemplatePath), templateOptions);
-  mkDir(config.reducersPath);
-  if (!Fs.existsSync(entity.reducerPath) || options.force) {
-    const content = reducerTemplate({ entity });
-    Fs.writeFileSync(entity.reducerPath, content);
+function reducer(state, action) {
+  switch (action.status) {
+    case STATUS_PROCESS:
+      return state;
+    case STATUS_SUCCESS:
+      return action.result;
+    case STATUS_FAILURE:
+      console.error(action.error); // eslint-disable-line no-console
+      return state;
   }
+  return state;
 }
-export function generateReducersIndex(entities) {
-  const indexTemplate = template(
-    Fs.readFileSync(config.reducersIndexTemplatePath), templateOptions);
-  mkDir(config.reducersPath);
-  const content = indexTemplate({ entities });
-  Fs.writeFileSync(Path.join(config.reducersPath, 'index.js'), content);
+
+export default function createReducer(defaultState) {
+  return function (state = defaultState, action) {
+    const { namespace } = action;
+    const prevNamespaceState = state[namespace];
+    const nextNamespaceState = reducer(prevNamespaceState, action);
+    if (typeof nextNamespaceState === 'undefined') {
+      throw new Error(`State from action '${action.namespace}:${action.type}' cannot be undefined`);
+    }
+    if (prevNamespaceState !== nextNamespaceState) {
+      return { ...state, [namespace]: nextNamespaceState };
+    }
+    return state;
+  };
 }

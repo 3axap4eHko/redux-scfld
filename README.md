@@ -1,12 +1,14 @@
-Redux Scaffold Generator
-====================
+# Redux Scaffold Generator
 
-**DISCLAIMER** this package is under development and api or templates may be changed
+[![NPM version][npm-image]][npm-url]
+[![Downloads][downloads-image]][npm-url]
+[![Build Status][travis-image]][travis-url]
+
 
 ## Install
  $ npm install -g redux-scfld
 
-#### Generated project required dependencies
+## Requirements
  - redux
  - redux-thunk
 
@@ -14,65 +16,88 @@ Redux Scaffold Generator
 
 ### Convention
 Redux Scaffold works with `actions`, `reducers`, initial `states` and `types` through the concept of
-Redux Scaffold Entity (RSE). That's meaning for a every RSE exists single `action` and `type`.
-All RSE grouped by RSE Namespace and for every RSE group exists initial `state` and `reducer`. Redux Scaffold generate
-RSE from RSE Full Name of following format `{RSENamespace}:{RSEName}`. For example:
+Redux Scaffold Entity (RSE). That's meaning all RSE grouped by RSE Namespace. 
+For a every single RSE exists a single `action` and a single `type` and for every RSE Namespace exists single initial `state` and `reducer`. 
+Redux Scaffold generates RSE from RSE Full Name of following format `{RSENamespace}:{RSEName}`. For example:
 `recently-posts:load-page` or `recentlyPosts:loadPage` has `recentlyPost` as RSE Namespace and `loadPage` as `RSE Name`.
-Through this approach will be generated `action`, `reducer`, `type` and initial `state`. Redux Scaffold action with parameter `type`
-has also parameter `status` which can be `STATUS_PROCESS`, `STATUS_SUCCESS` and `STATUS_FAILURE` in compare of usual behavior
-of Redux.
+Through this approach will be generated `action`, `reducer`, `type` and initial `state`. 
+Redux Scaffold action with parameter `type` has also parameter `status` which can be 
+`STATUS_PROCESS`, `STATUS_SUCCESS` and `STATUS_FAILURE` in compare of usual behavior of Redux.
 
-### Configuration
-.reduxrc
+## Let's scaffold
+```bash
+npm install -g redux-scfld
+cd ~/projects/my-project
+redux init --path src/redux
+``` 
+
+Inside of `~/projects/my-project` you will find a file `.reduxrc`
 ``` json
 {
   "useCamelCasedPaths": true,
-  "actionsPath": "./app/actions",
-  "actionTemplatePath": "./node_modules/redux-scfld/dist/templates/action.jst",
-  "actionsIndexTemplatePath": "./node_modules/redux-scfld/dist/templates/action-index.jst",
-  "reducersPath": "./app/reducers",
-  "reducerTemplatePath": "./node_modules/redux-scfld/dist/templates/reducer.jst",
-  "reducersIndexTemplatePath": "./node_modules/redux-scfld/dist/templates/reducer-index.jst",
-  "typesPath": "./app/types",
-  "typesTemplatePath": "./node_modules/redux-scfld/dist/templates/types.jst",
-  "statesPath": "./app/states",
-  "stateTemplatePath": "./node_modules/redux-scfld/dist/templates/state.jst",
-  "statesIndexTemplatePath": "./node_modules/redux-scfld/dist/templates/state-index.jst"
+  "actionsPath": "./src/redux/actions",
+  "actionTemplatePath": "./src/redux/templates/action.dot",
+  "actionsIndexTemplatePath": "./src/redux/templates/action-index.dot",
+  "reducersPath": "./src/redux/reducers",
+  "reducerTemplatePath": "./src/redux/templates/reducer.dot",
+  "reducersIndexTemplatePath": "./src/redux/templates/reducer-index.dot",
+  "typesPath": "./src/redux/types",
+  "typesTemplatePath": "./src/redux/templates/types.dot",
+  "statesPath": "./src/redux/states",
+  "stateTemplatePath": "./src/redux/templates/state.dot",
+  "statesIndexTemplatePath": "./src/redux/templates/state-index.dot"
 }
 ```
-### Action, Types and Reducer generation
-
+Here `useCamelCasedPaths` affect naming behavior between `camelCase` and `dash-case`.
+As template engine used `doT`.
+Let's create an action, reducer, type and initial state of RSE. 
 ``` bash
-$ redux add posts:fetchPage
+redux add config:load config:save posts:fetchPage
 ```
+After this command will be generated following files
 ```
-+---app
-    |   default-state.js
-    |   store.js
-    |   
-    +---actions
-    |   |   index.js
-    |   |   
-    |   \---posts
-    |           fetch-page.js
-    |           
-    +---reducers
-    |       index.js
-    |       posts.js
++---src
     |
-    |
-    |           
-    +---state
-    |       index.js
-    |       posts.js
-    |
-    \---types
-            index.js
+    \---redux
+        |   
+        +---actions
+        |   |   index.js
+        |   |
+        |   +---config   
+        |   |       load.js
+        |   |       save.js
+        |   \---posts
+        |           fetchPage.js
+        |           
+        +---reducers
+        |       index.js
+        |       config.js
+        |       posts.js
+        |
+        |
+        +---state
+        |       index.js
+        |       config.js
+        |       posts.js
+        |
+        |
+        +---templates
+        |       action.dot
+        |       action-index.dot
+        |       reducer.dot
+        |       reducer-index.dot
+        |       state.dot
+        |       state-index.dot
+        |       types.dot
+        |           
+        |           
+        \---types
+                index.js
 ```
 
 #### Actions
 
-`app/actions/posts/fetch-page.js` contains
+`src/redux/actions/posts/fetchPage.js` contains
 ``` javascript
 export default function(getState, ...args) {
     /** Action code HERE */
@@ -91,9 +116,11 @@ import {
     POSTS_FETCH_PAGE
 } from './../types';
 
-import postsFetchPageAction from './posts/fetch-page.js';
+import configLoadAction from './config/load.js';
+import configSaveAction from './config/save.js';
+import postsFetchPageAction from './posts/fetchPage.js';
 
-function _createProcess(namespace, type, ...args) {
+function _createProcess(namespace, type, ...args) { // eslint-disable-line no-underscore-dangle
     return {
         namespace,
         type,
@@ -101,7 +128,7 @@ function _createProcess(namespace, type, ...args) {
         args
     };
 }
-function _createSuccess(namespace, type, result) {
+function _createSuccess(namespace, type, result) { // eslint-disable-line no-underscore-dangle
     return {
         namespace,
         type,
@@ -109,7 +136,7 @@ function _createSuccess(namespace, type, result) {
         result
     };
 }
-function _createFailure(namespace, type, error, args) {
+function _createFailure(namespace, type, error, args) { // eslint-disable-line no-underscore-dangle
     return {
         namespace,
         type,
@@ -119,18 +146,18 @@ function _createFailure(namespace, type, error, args) {
     };
 }
 
-function _createAction(namespace, type, action) {
-    return (...args) => {
-        return (dispatch, getState) => {
-            dispatch(_createProcess(namespace, type, ...args));
-            return new Promise( resolve => resolve(action(getState, ...args)) )
-                .then(result => dispatch(_createSuccess(namespace, type, result)))
-                .catch(error => dispatch(_createFailure(namespace, type, error, args)));
-        }
-    }
+function _createAction(namespace, type, action) { // eslint-disable-line no-underscore-dangle
+  return (...args) => (dispatch, getState) => {
+    return dispatch(_createProcess(namespace, type, ...args))
+      .then(() => action(getState, ...args))
+      .then(result => dispatch(_createSuccess(namespace, type, result)))
+      .catch(error => dispatch(_createFailure(namespace, type, error, args)));
+  };
 }
 
-export const testFailure = _createAction(NAMESPACE_POSTS, POSTS_FETCH_PAGE, postsFetchPageAction);
+export const configLoad = _createAction(NAMESPACE_CONFIG, CONFIG_LOAD, configLoadAction);
+export const configSave = _createAction(NAMESPACE_CONFIG, CONFIG_SAVE, configSaveAction);
+export const postsFetchPage = _createAction(NAMESPACE_POSTS, POSTS_FETCH_PAGE, postsFetchPageAction);
 ```
 
 **IMPORTANT**: Instead of original Redux actions, Redux Scaffold Actions has only one `type`, but one `namespace` and 3 `statuses`: `STATUS_PROCESS`, `STATUS_SUCCESS`, `STATUS_FAILURE`
@@ -153,6 +180,7 @@ export const NAMESPACES = [
 // Generated types
 export const POSTS_FETCH_PAGE = 'POSTS_FETCH_PAGE';
 ```
+
 #### Reducer
 `app/reducers/posts.js` contains
 ``` javascript
@@ -275,15 +303,15 @@ Entities = {
 
 
 ### Commands
-`$ redux init` - Generate Redux-Scfld config file `.reduxrc`
+`$ redux init --path src/redux` - Generate Redux-Scfld config file `.reduxrc` and dumps templates to `src/redux/templates`
 
-`$ redux add <entities>` - Adds entities with Action, Type and Reducer and generates their indexes
+`$ redux add <entities>` - Adds entities separated by whitespace with Action, Type and Reducer and generates their indexes
 
-`$ redux del <entities>` - Deletes entities with Action, Type and Reducer or all namespaces and generates their indexes
+`$ redux del <entities>` - Deletes entities separated by whitespace with Action, Type and Reducer or all namespaces and generates their indexes
 
 `$ redux config` - Display current config
 
-`$ redux gen` - Regenerate indexes of Actions, Types and Reducers (does not affect already generated not indexes files)
+`$ redux sync` - Sync indexes of Actions, Types and Reducers (does not affect already generated not indexes files)
 
 `$ redux list` - List of entities
 
@@ -301,4 +329,11 @@ Entities = {
 
 ## License
 [The MIT License](http://opensource.org/licenses/MIT)
-Copyright (c) 2016 Ivan Zakharchenko
+Copyright (c) 2016-2018 Ivan Zakharchenko
+
+[downloads-image]: https://img.shields.io/npm/dm/redux-scfld.svg
+[npm-url]: https://www.npmjs.com/package/redux-scfld
+[npm-image]: https://img.shields.io/npm/v/redux-scfld.svg
+
+[travis-url]: https://travis-ci.org/3axap4eHko/redux-scfld
+[travis-image]: https://img.shields.io/travis/3axap4eHko/redux-scfld/master.svg

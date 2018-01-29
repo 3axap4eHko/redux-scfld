@@ -1,17 +1,16 @@
-{__warning_header}
-<%
+{{=it.__warning_header}}
+{{
     const reducers = {};
-    eachEntity(entities, entity => reducers[entity.namespace] = relative(config.reducersPath, entity.reducerPath) );
-
-    const importReducers = Object.keys(reducers).map( namespace => `import ${namespace} from './${noExt(reducers[namespace])}';` ).join('\n');
+    it.eachEntity(it.entities, entity => reducers[entity.namespace] = it.relative(it.config.reducersPath, entity.reducerPath));
+    const importReducers = Object.keys(reducers).map( namespace => `import ${namespace} from './${it.noExt(reducers[namespace])}';` ).join('\n');
     const mappedReducers = Object.keys(reducers).join(',\n  ');
-    const statePath      = relative(config.reducersPath, config.statesPath);
-%>
-{importReducers}
-import defaultState from './{statePath}';
+    const statePath      = it.relative(it.config.reducersPath, it.config.statesPath);
+}}
+{{=importReducers}}
+import defaultState from './{{=statePath}}';
 
 const namespaceReducersMap = {
-  {mappedReducers},
+  {{=mappedReducers}},
 };
 
 export default function (state = defaultState, action) {
