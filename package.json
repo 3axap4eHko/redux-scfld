@@ -17,6 +17,7 @@
   "description": "Redux Scaffold Generator",
   "version": "1.0.0",
   "scripts": {
+    "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
     "test": "lerna run test",
     "test:unit": "lerna run test:unit --stream",
