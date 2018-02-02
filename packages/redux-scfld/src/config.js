@@ -1,5 +1,5 @@
 import Fs from 'fs';
-import { join, configFile } from './utils';
+import { join, resolve, configFile } from './utils';
 
 export function getBaseConfig(folder) {
   return {
@@ -23,6 +23,6 @@ export function getAdvancedConfig(folder) {
   };
 }
 
-export const defaultConfig = Object.freeze(getAdvancedConfig(__dirname));
+export const defaultConfig = Object.freeze(getAdvancedConfig(resolve(__dirname, '../')));
 
 export const loadedConfig = Object.freeze(Object.assign({}, defaultConfig, Fs.existsSync(configFile) ? JSON.parse(Fs.readFileSync(configFile, 'utf8')) : {}));

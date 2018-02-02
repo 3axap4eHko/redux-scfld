@@ -1,5 +1,4 @@
-sudo: required
-dist: trusty
+dist: precise
 language: node_js
 node_js:
   - "8"
@@ -11,5 +10,5 @@ before_install:
 install:
   - yarn
 script:
-  - yarn test
-  - yarn intest
+  - yarn test:unit
+  - yarn test:integration

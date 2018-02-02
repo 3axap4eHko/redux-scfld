@@ -4,8 +4,6 @@ import { globRelative, getEntity, getEntities } from '../utils';
 
 const tmpDir = resolve(__dirname + '/../../tmp/actions');
 
-console.log(process.cwd());
-
 test('Action create', async () => {
   const entity = getEntity('app:load');
   await createAction(entity, { force: true });
