@@ -1,0 +1,42 @@
+{
+  "name": "redux-scfld",
+  "version": "3.0.0",
+  "bin": {
+    "redux": "./dist/redux.js"
+  },
+  "description": "Redux Scaffold",
+  "scripts": {
+    "build": "rm -rf dist && babel src --out-dir dist --ignore __tests__,__fixtures__",
+    "test": "cross-env NODE_ENV=test jest",
+    "test:unit": "rm -rf tmp && cross-env NODE_ENV=test jest --testPathPattern=unit",
+    "test:integration": "rm -rf tmp && cross-env NODE_ENV=test jest src/__tests__/api.js"
+  },
+  "keywords": [
+    "redux",
+    "scaffolder"
+  ],
+  "author": "Ivan Zakharchenko <3axap4eHko.development@gmail.com> (http://potofcode.com/)",
+  "license": "MIT",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/MIT"
+    }
+  ],
+  "dependencies": {
+    "commander": "^2.13.0",
+    "del": "^3.0.0",
+    "dot": "^1.1.2",
+    "glob": "^7.0.5",
+    "mkdirp": "^0.5.1",
+    "redux-base": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/3axap4eHko/redux-scfld.git"
+  },
+  "bugs": {
+    "url": "https://github.com/3axap4eHko/redux-scfld/issues"
+  },
+  "homepage": "https://github.com/3axap4eHko/redux-scfld#readme"
+}

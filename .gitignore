@@ -1,7 +1,7 @@
 .idea
 .vscode
-.tmp 
-dist
-tmp
+dist/
+packages/*/*.js
+tmp/
 node_modules/
 *.log*
