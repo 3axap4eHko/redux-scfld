@@ -2,7 +2,7 @@ import { join, basename, relative, resolve } from 'path';
 import { createAction, generateActionsIndex } from './action';
 import generateTypes from './types';
 import { createState, generateStatesIndex } from './state';
-import { parseName, getEntity, getEntities, flatEntities, eachEntity, mkDir, write, read, exists, rm, glob, copy } from './utils';
+import { parseName, getEntity, getEntities, flatEntities, eachEntity, mkDir, writeJSON, readJSON, exists, rm, glob, copy } from './utils';
 import { loadedConfig, getBaseConfig, getAdvancedConfig } from './config';
 import { version as reduxBaseVersion } from 'redux-base/package.json';
 
@@ -80,19 +80,19 @@ export async function copyTemplatesTo(dir) {
 export async function init(path) {
   const packageJsonFile = resolve(process.cwd(), 'package.json');
   if (await exists(packageJsonFile)) {
-    const packageJson = JSON.parse(await read(packageJsonFile));
+    const packageJson = await readJSON(packageJsonFile);
     if (!packageJson.devDependencies) {
       packageJson.devDependencies = {};
     }
     packageJson.devDependencies['redux-base'] = reduxBaseVersion;
-    await write(packageJsonFile, JSON.stringify(packageJson, null, '  '));
+    await writeJSON(packageJsonFile, packageJson);
   }
   if (path) {
     const dir = `./${relative(process.cwd(), path)}`;
-    await write('.reduxrc', JSON.stringify(getAdvancedConfig(dir), null, '  '));
+    await writeJSON('.reduxrc', getAdvancedConfig(dir));
     await copyTemplatesTo(join(dir, 'templates'));
   } else {
-    await write('.reduxrc', JSON.stringify(getBaseConfig('./src/redux'), null, '  '));
+    await writeJSON('.reduxrc', getBaseConfig('./src/redux'));
   }
 }
 

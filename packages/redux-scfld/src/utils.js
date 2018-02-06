@@ -19,6 +19,15 @@ const nameExtractExpr = /\/([\w-]+)\/([\w-]+)(\.js)?$/;
 const extensionExpr = /\.\w+$/;
 const splitExpr = /[_*.,:\s\-]+/;
 
+export function isModuleExists(moduleName) {
+  try {
+    require.resolve(moduleName);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
 export function lowerFirst(value) {
   return value[0].toLowerCase() + value.slice(1);
 }
@@ -58,8 +67,16 @@ export async function write(filename, content) {
   return writeFileAsync(filename, content);
 }
 
+export async function writeJSON(filename, data) {
+  return write(filename, JSON.stringify(data, null, '  '));
+}
+
 export async function read(filename, enc = 'utf8') {
   return readFileAsync(filename, enc);
+}
+
+export async function readJSON(filename) {
+  return JSON.parse(await readFileAsync(filename));
 }
 
 export async function exists(filename) {
