@@ -68,6 +68,10 @@ commander
     commander.outputHelp();
   });
 
+commander.on('-v', () => {
+  console.log(version);
+});
+
 commander.on('--help', () => {
   console.log('  Examples:');
   console.log('');
