@@ -20,13 +20,15 @@ function reducer(state, action) {
 export default function createReducer(defaultState) {
   return function (state = defaultState, action) {
     const { namespace } = action;
-    const prevNamespaceState = state[namespace];
-    const nextNamespaceState = reducer(prevNamespaceState, action);
-    if (typeof nextNamespaceState === 'undefined') {
-      throw new Error(`State from action '${action.namespace}:${action.type}' cannot be undefined`);
-    }
-    if (prevNamespaceState !== nextNamespaceState) {
-      return { ...state, [namespace]: nextNamespaceState };
+    if (namespace) {
+      const prevNamespaceState = state[namespace];
+      const nextNamespaceState = reducer(prevNamespaceState, action);
+      if (typeof nextNamespaceState === 'undefined') {
+        throw new Error(`State from action '${action.namespace}:${action.type}' cannot be undefined`);
+      }
+      if (prevNamespaceState !== nextNamespaceState) {
+        return { ...state, [namespace]: nextNamespaceState };
+      }
     }
     return state;
   };

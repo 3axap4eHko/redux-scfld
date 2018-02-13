@@ -4,7 +4,7 @@ import { join, resolve, configFile } from './utils';
 export function getBaseConfig(folder) {
   return {
     useCamelCasedPaths: false,
-    reduxPath: folder,
+    reduxPath: join(folder),
     actionsPath: join(folder, 'actions'),
     typesPath: join(folder, 'types'),
     statesPath: join(folder, 'states'),

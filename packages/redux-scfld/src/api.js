@@ -30,7 +30,6 @@ export async function add(entityNames, options) {
 }
 
 export async function del(entityNames, options) {
-
   for (const entityName of entityNames) {
     const entity = getEntity(parseName(`${entityName}:*`).join(':'));
     if (/\*/.test(entity.filename)) {
@@ -82,10 +81,10 @@ export async function init(path) {
   const packageJsonFile = resolve(process.cwd(), 'package.json');
   if (await exists(packageJsonFile)) {
     const packageJson = await readJSON(packageJsonFile);
-    if (!packageJson.devDependencies) {
-      packageJson.devDependencies = {};
+    if (!packageJson.dependencies) {
+      packageJson.dependencies = {};
     }
-    packageJson.devDependencies['redux-base'] = reduxBaseVersion;
+    packageJson.dependencies['redux-base'] = reduxBaseVersion;
     await writeJSON(packageJsonFile, packageJson);
   }
   if (path) {
