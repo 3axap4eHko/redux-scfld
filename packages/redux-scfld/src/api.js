@@ -2,6 +2,7 @@ import { join, basename, relative, resolve } from 'path';
 import { createAction, generateActionsIndex } from './action';
 import generateTypes from './types';
 import { createState, generateStatesIndex } from './state';
+import { generateStoreCreator } from './store';
 import { parseName, getEntity, getEntities, flatEntities, eachEntity, mkDir, writeJSON, readJSON, exists, rm, glob, copy } from './utils';
 import { loadedConfig, getBaseConfig, getAdvancedConfig } from './config';
 import { version as reduxBaseVersion } from 'redux-base/package.json';
@@ -91,8 +92,10 @@ export async function init(path) {
     const dir = `./${relative(process.cwd(), path)}`;
     await writeJSON('.reduxrc', getAdvancedConfig(dir));
     await copyTemplatesTo(join(dir, 'templates'));
+    await generateStoreCreator(dir);
   } else {
     await writeJSON('.reduxrc', getBaseConfig('./src/redux'));
   }
+
 }
 

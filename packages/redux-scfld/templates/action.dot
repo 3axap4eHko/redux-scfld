@@ -1,10 +1,10 @@
 {{=it.__info_header}}
-import createAction from 'redux-base/createAction';
+import action from 'redux-base/createAction';
 import {
   NAMESPACE_{{=it.entity.NAMESPACE}},
   {{=it.entity.TYPE}},
-} from '../types';
+} from '../../types';
 
-export default function createAction(NAMESPACE_{{=it.entity.NAMESPACE}}, {{=it.entity.TYPE}}, (getState, ...args) => {
+export default action(NAMESPACE_{{=it.entity.NAMESPACE}}, {{=it.entity.TYPE}}, (getState, ...args) => {
   /** Action code HERE */
 });

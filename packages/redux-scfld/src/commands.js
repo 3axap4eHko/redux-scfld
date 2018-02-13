@@ -7,11 +7,10 @@ commander
   .usage('[options] <command>');
 
 commander
-  .command('init')
+  .command('init <path>')
   .alias('i')
   .description('Generate Redux-Scfld config file .reduxrc')
-  .option('-p, --path <path>', 'use custom path to generate templates')
-  .action(({ path }) => Api.init(path));
+  .action((path) => Api.init(path));
 
 commander
   .command('add <entity> [entities...]')

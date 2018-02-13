@@ -1,7 +1,7 @@
 import Path from 'path';
 import { compile } from './template';
 import { loadedConfig as config } from './config';
-import { mkDir, exists, write } from './utils';
+import { mkDir, write } from './utils';
 
 export async function generateStoreCreator() {
   const indexTemplate = await compile(config.storeTemplatePath);
