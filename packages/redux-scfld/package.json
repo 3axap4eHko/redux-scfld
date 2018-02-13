@@ -9,7 +9,7 @@
     "build": "rm -rf dist && babel src --out-dir dist --ignore __tests__,__fixtures__",
     "test": "cross-env NODE_ENV=test jest",
     "test:unit": "rm -rf tmp && cross-env NODE_ENV=test jest --testPathPattern=unit",
-    "test:integration": "rm -rf tmp && cross-env NODE_ENV=test jest src/__tests__/api.js"
+    "test:integration": "rm -rf tmp-api && cross-env NODE_ENV=test jest src/__tests__/api.js"
   },
   "keywords": [
     "redux",
@@ -28,8 +28,7 @@
     "del": "^3.0.0",
     "dot": "^1.1.2",
     "glob": "^7.0.5",
-    "mkdirp": "^0.5.1",
-    "redux-base": "^3.0.3"
+    "mkdirp": "^0.5.1"
   },
   "repository": {
     "type": "git",
