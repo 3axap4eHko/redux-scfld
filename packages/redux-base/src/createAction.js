@@ -5,12 +5,12 @@ import {
 } from './constants';
 
 function startActionCreator(namespace, type, ...args) { // eslint-disable-line no-underscore-dangle
-  return Promise.resolve({
+  return {
     namespace,
     type,
     status: STATUS_START,
     args,
-  });
+  };
 }
 
 function successActionCreator(namespace, type, result) { // eslint-disable-line no-underscore-dangle
@@ -34,7 +34,7 @@ function failActionCreator(namespace, type, error, args) { // eslint-disable-lin
 
 export default function createAction(namespace, type, action) { // eslint-disable-line no-underscore-dangle
   return (...args) => (dispatch, getState) => {
-    return dispatch(startActionCreator(namespace, type, ...args))
+    return Promise.resolve(dispatch(startActionCreator(namespace, type, ...args)))
       .then(() => action(getState, ...args))
       .then(result => dispatch(successActionCreator(namespace, type, result)))
       .catch(error => dispatch(failActionCreator(namespace, type, error, args)));
