@@ -34,7 +34,7 @@ commander
 commander
   .command('sync')
   .alias('s')
-  .description('Sync actions, reducers, states and types')
+  .description('Sync actions, states and types')
   .action(() => Api.sync());
 
 commander
@@ -56,12 +56,6 @@ commander
   .action(() => Api.types());
 
 commander
-  .command('templates <dir>')
-  .alias('tpl')
-  .description('Generate templates into target directory')
-  .action(dir => Api.copyTemplatesTo(dir));
-
-commander
   .command('*')
   .action(() => {
     commander.outputHelp();
@@ -74,9 +68,10 @@ commander.on('-v', () => {
 commander.on('--help', () => {
   console.log('  Examples:');
   console.log('');
-  console.log(' redux init -p app/redux');
+  console.log(' redux init app/redux');
   console.log(' redux add app:load app:save app:reset');
   console.log(' redux del app:* config:load');
+  console.log(' redux namespaces');
   console.log(' redux ls');
   console.log('');
 });

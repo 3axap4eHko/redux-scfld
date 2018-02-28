@@ -20,7 +20,7 @@ const reducer = createReducer(defaultState);
 
 const middleware = [
   thunkMiddleware,
-  DEBUG && loggerMiddleware,
+  loggerMiddleware,
 ].filter(Boolean);
 
 export default function create(initialState = defaultState) {
