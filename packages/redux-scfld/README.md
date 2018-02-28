@@ -46,7 +46,7 @@ Inside of `~/projects/my-project` you will find a file `.reduxrc`
   "statesIndexTemplatePath": "src/templates/state-index.dot"
 }
 ```
-Here `useCamelCasedPaths` affect naming behavior between `camelCase` and `dash-case`.
+Here is property `useCamelCasedPaths` affects naming behavior between `camelCase` and `dash-case`.
 As template engine used `doT`.
 
 #### Structure
