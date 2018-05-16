@@ -259,7 +259,6 @@ interface Entities {
 `$ redux --help` - Display help information
 
 ### Demo project
-
 (Powered by redux-scfld: React-Redux demo)[https://github.com/3axap4eHko/react-redux-demo]
 
 ## License

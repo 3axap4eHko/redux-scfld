@@ -11,6 +11,7 @@ yarn add redux-base
 Create action
 ```javascript
 import createAction from 'redux-base/createAction';
+
 import {
   NAMESPACE_APP,
   APP_LOAD,
