@@ -1,6 +1,6 @@
 {
   "name": "redux-scfld",
-  "version": "3.4.2",
+  "version": "3.4.3",
   "bin": {
     "redux": "./dist/redux.js"
   },
@@ -30,7 +30,7 @@
     "dot": "^1.1.2",
     "glob": "^7.0.5",
     "mkdirp": "^0.5.1",
-    "redux-base": "^3.4.2"
+    "redux-base": "^3.4.3"
   },
   "repository": {
     "type": "git",
