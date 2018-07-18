@@ -24,6 +24,7 @@
     }
   ],
   "dependencies": {
+    "babel-runtime": "^6.26.0",
     "commander": "^2.13.0",
     "del": "^3.0.0",
     "dot": "^1.1.2",

@@ -8,7 +8,6 @@
     }]
   ],
   "plugins": [
-    "transform-object-rest-spread",
-    ["transform-runtime", { "helpers": false, "polyfill": false }]
+    "transform-object-rest-spread"
   ]
 }
