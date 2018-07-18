@@ -15,7 +15,7 @@
   },
   "name": "redux-scfld",
   "description": "Redux Scaffold Generator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "scripts": {
     "bootstrap": "lerna bootstrap",
     "build": "lerna run build --stream",
